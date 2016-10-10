@@ -1,14 +1,14 @@
 #!/bin/bash
 
 #   EXAMPLES: 
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=stauilrh --course=BPMS                       :   Creates new BPM project for user: stauilrh
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -r --user=stauilrh --course=BPMS                       :   Removes BPM project for user:  stauilrh
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=jbride-redhat.com --course=AMQ               :   Creates new AMQ project for user: jbride-redhat.com
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=jbride-redhat.com --course=OSE_APPDEV         :   Creates new App Dev Using OSE project for user: jbride-redhat.com
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=sjayanti-redhat.com --course=FIS             :   Creates new Fuse Integration Services project for user: sjayanti-redhat.com
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=stauilrh --course=BPMS                                                       :   Creates new BPM project for user: stauilrh
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -r --user=stauilrh --course=BPMS                                                       :   Removes BPM project for user:  stauilrh
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=jbride-redhat.com --course=AMQ                                               :   Creates new AMQ project for user: jbride-redhat.com
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=jbride-redhat.com --course=OSE_APPDEV                                        :   Creates new App Dev Using OSE project for user: jbride-redhat.com
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=sjayanti-redhat.com --course=FIS                                             :   Creates new Fuse Integration Services project for user: sjayanti-redhat.com
 
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=jbride-redhat.com --course=MAP_FOUNDATIONAL     :   Creates MAP_FOUNDATIONAL course using userId = jbride-redhat.com
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -r --user=jbride-redhat.com --course=MAP_FOUNDATIONAL    :   Deletes MAP_FOUNDATIONAL course using userId = jbride-redhat.com
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=jbride-redhat.com --course=MAP_FOUNDATIONAL --email=jbride2000@gmail.com     :   Creates MAP_FOUNDATIONAL course using userId = jbride-redhat.com
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -r --user=jbride-redhat.com --course=MAP_FOUNDATIONAL                                  :   Deletes MAP_FOUNDATIONAL course using userId = jbride-redhat.com
 
 #   ADMIN NOTES:
 #   This script is installed at:  opentlc-mgr@inf00-mwl.opentlc.com:/home/opentlc-mgr/bin/provision-ose-projects.sh
@@ -32,10 +32,11 @@ declare -A COURSES
 COURSES=(["OSE_APPDEV"]=1 ["BPMS"]=2 ["JDV_DEV"]=2 ["AMQ"]=1 ["FIS"]=0 ["MAP_FOUNDATIONAL"]=1)
 
 
+DEBUG=false
 ADD=false
 REMOVE=false
 COURSE_EXIST=false
-OPTS=`getopt -o ar -l user:,course: -n 'parse-options' -- "$@"`
+OPTS=`getopt -o ar -l user:,course:,email: -n 'parse-options' -- "$@"`
 if [ $? != 0 ];
 then
     echo "Failed parsing options." >&2;
@@ -50,6 +51,7 @@ while true; do
         -r) REMOVE=true; shift;;
         --user) USERNAME="$2"; shift 2;;
         --course) COURSENAME="$2"; shift 2;;
+        --email) USER_EMAIL="$2"; shift 2;;
         --) shift; break;;
         *) break;;
     esac
@@ -148,10 +150,16 @@ app_provision() {
 
 
 createMAPProject() {
-    USER_EMAIL=jbride2000@gmail.com
-    DEBUG=false
+    map_guid="";
 
-    echo "$USERNAME : Creating MAP project: $PROJECTNAME" >> $LOG_FILE
+    # 1)  Ensure email variable exists
+    if [[ x$USER_EMAIL == x ]]; then
+        echo -en "$USERNAME : must pass the user email address" >> $LOG_FILE
+        exit 1;
+    fi
+
+    # 2)  Determine whether user already exists in MAP Core environment
+    echo "$USERNAME : Creating MAP user with email: $USER_EMAIL" >> $LOG_FILE
     eval queryResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "username":"'$USERNAME'" }' https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/read`
 
     if [[ $DEBUG == true ]]; then echo -en "$USERNAME : DEBUG queryResponse = $queryResponse\n" >> $LOG_FILE;  fi
@@ -161,6 +169,7 @@ createMAPProject() {
 
         echo "$USERNAME : User does not exist in MAP Core.  Will now create with email = $USER_EMAIL" >> $LOG_FILE
 
+        # 3)  User does not exist in MAP Core.  Create user given name and email
         eval postResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d'{ "username":"'$USERNAME'", "email":"'$USER_EMAIL'", "name":"'$USERNAME'", "invite":true}' \
             "https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/create"`
 
@@ -168,9 +177,29 @@ createMAPProject() {
         then
     	    echo -en "$USERNAME : Error postResponse = $postResponse\n" >> $LOG_FILE
             exit 1;
+	elif [[ $postResponse == *"user_invalid_email"* ]]; then
+    	    echo -en "$USERNAME : Error postResponse = $postResponse\n" >> $LOG_FILE
+            exit 1;
+	elif [[ $postResponse == *"status:ok"* ]]; then
+      	    echo -en "$USERNAME : successfully created user: postResponse = $postResponse\n" >> $LOG_FILE;
+
+            # 4)  User should now exist.  Query MAP Core to determine GUID
+    	    eval queryResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "username":"'$USERNAME'" }' https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/read`
+            if [[ $DEBUG == true ]]; then echo -en "$USERNAME : DEBUG queryResponse = $queryResponse\n" >> $LOG_FILE;  fi
+            map_guid=${queryResponse##*guid:}
+            map_guid=${map_guid%%,*}
+      	    echo -en "$USERNAME : successfully created user: map_guid = $map_guid\n" >> $LOG_FILE;
+
+            # 5)  Add user to Student team
+            eval postResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "guid":"'$map_guid'" }' \
+                https://gpte.us.training.redhatmobile.com/api/v2/admin/teams/57f6aab1adc986a25304bd2b/user/${map_guid}`
+
+            if [[ $DEBUG == true ]]; then echo -en "$USERNAME : DEBUG add student to team: postResponse = $postResponse\n" >> $LOG_FILE;  fi
+        else
+      	    echo -en "$USERNAME : ERROR: postResponse = $postResponse\n" >> $LOG_FILE;
+            exit;
         fi
 
-        echo -en "$USERNAME : postResponse = $postResponse\n" >> $LOG_FILE;
 
     elif [[ $queryResponse = *"status:ok"* ]]; then
         echo -en "$USERNAME : MAP user already found; Completing\n" >> $LOG_FILE
