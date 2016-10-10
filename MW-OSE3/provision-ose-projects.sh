@@ -1,11 +1,14 @@
 #!/bin/bash
 
 #   EXAMPLES: 
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=stauilrh --course=BPMS               		:   Creates new BPM project for user: stauilrh
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -r --user=stauilrh --course=BPMS               		:   Removes BPM project for user:  stauilrh
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=jbride-redhat.com --course=AMQ       		:   Creates new AMQ project for user: jbride-redhat.com
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=jbride-redhat.com --course=OSE_APPDEV     	:   Creates new App Dev Using OSE project for user: jbride-redhat.com
-#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=sjayanti-redhat.com --course=FIS     		:   Creates new Fuse Integration Services project for user: sjayanti-redhat.com
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=stauilrh --course=BPMS                       :   Creates new BPM project for user: stauilrh
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -r --user=stauilrh --course=BPMS                       :   Removes BPM project for user:  stauilrh
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=jbride-redhat.com --course=AMQ               :   Creates new AMQ project for user: jbride-redhat.com
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=jbride-redhat.com --course=OSE_APPDEV         :   Creates new App Dev Using OSE project for user: jbride-redhat.com
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=sjayanti-redhat.com --course=FIS             :   Creates new Fuse Integration Services project for user: sjayanti-redhat.com
+
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -a --user=jbride-redhat.com --course=MAP_FOUNDATIONAL     :   Creates MAP_FOUNDATIONAL course using userId = jbride-redhat.com
+#     /home/opentlc-mgr/bin/provision-ose-projects.sh -r --user=jbride-redhat.com --course=MAP_FOUNDATIONAL    :   Deletes MAP_FOUNDATIONAL course using userId = jbride-redhat.com
 
 #   ADMIN NOTES:
 #   This script is installed at:  opentlc-mgr@inf00-mwl.opentlc.com:/home/opentlc-mgr/bin/provision-ose-projects.sh
@@ -26,7 +29,8 @@ JDV_DEV=JDV_DEV
 LOG_FILE=/tmp/ose_provision.log
 
 declare -A COURSES
-COURSES=(["OSE_APPDEV"]=1 ["BPMS"]=2 ["JDV_DEV"]=2 ["AMQ"]=1 ["FIS"]=0)
+COURSES=(["OSE_APPDEV"]=1 ["BPMS"]=2 ["JDV_DEV"]=2 ["AMQ"]=1 ["FIS"]=0 ["MAP_FOUNDATIONAL"]=1)
+
 
 ADD=false
 REMOVE=false
@@ -109,7 +113,7 @@ app_provision() {
         pvc_provision
     elif [ "$COURSENAME" = "FIS" ] ; then
         # No need to instantiate an app
-	sleep 0;
+    sleep 0;
     elif [ "$COURSENAME" = "$AMQ" ] ; then
 
         # last updated from:  tag = ose-v1.3.0-1  ;      project = https://github.com/jboss-openshift/application-templates.git
@@ -133,9 +137,70 @@ app_provision() {
             echo "*** Error provisioning AMQ= $OUT " >> $LOG_FILE
             exit 0;
         fi
+    elif [ "$COURSENAME" = "MAP_FOUNDATIONAL" ] ; then
+        echo "$username_short : About to provision MAP_FOUNDATIONAL course for" >> $LOG_FILE
     else
         echo "The course $COURSENAME is not valid. Possible options are: ${!COURSES[@]}" >> $LOG_FILE
         exit 1
+    fi
+}
+
+
+
+createMAPProject() {
+    TEST_USER=jbride
+    USER_EMAIL="jbride\@redhat.com";
+    USER_FULL_NAME="Jeff Bride";
+    DEBUG=false
+
+    echo "$TEST_USER : Creating MAP project: $PROJECTNAME" >> $LOG_FILE
+    eval queryResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "username":"${TEST_USER}" }' https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/read`
+
+    if [[ $DEBUG == true ]]; then echo -en "$TEST_USER : DEBUG queryResponse = $queryResponse\n" >> $LOG_FILE;  fi
+
+    if [[ $queryResponse == *"User not found"* ]]; then
+
+        echo "$TEST_USER : User does not exist in MAP Core.  Will now create" >> $LOG_FILE
+
+        eval postResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d'{ "username":"${TEST_USER}", "email":"jbride200@gmail.com", "name":"${USER_FULL_NAME}", "invite":true}' https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/create`
+
+        # User with email address already exists for this customer
+        # status:ok
+
+        # eval queryResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" \
+        #   -d'{ "username":${TEST_USER}, "email":${USER_EMAIL}, "name":${USER_FULL_NAME}, "invite":true}' \
+        #   https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/create`
+
+    	if [[ $postResponse == *"status:error"* ]]
+        then
+    	    echo -en "$TEST_USER : Error postResponse = $postResponse\n" >> $LOG_FILE
+            exit 1;
+        fi
+
+        echo -en "$TEST_USER : postResponse = $postResponse\n" >> $LOG_FILE;
+
+    elif [[ $queryResponse = *"status:ok"* ]]; then
+        echo -en "$TEST_USER : MAP user already found; Completing\n" >> $LOG_FILE
+    else 
+        echo -en "$TEST_USER : ERROR querying for user = $queryResponse\n" >> $LOG_FILE;
+        exit 1;
+    fi
+
+}
+
+deleteMAPProject() {
+    TEST_USER=jbride
+    USER_EMAIL="jbride\@redhat.com";
+    USER_FULL_NAME="Jeff Bride";
+    DEBUG=true
+
+    echo "$TEST_USER : Deleting MAP project: $PROJECTNAME " >> $LOG_FILE
+    eval deleteResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "username": "${TEST_USER}" }' \
+      "https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/delete"`
+
+    if [[ $deleteResponse != *"status:ok"* ]]; then
+        echo -en "$TEST_USER : ERROR deleting user. Response = $deleteResponse\n" >> $LOG_FILE;
+        exit 1;
     fi
 }
 
@@ -144,11 +209,19 @@ echo -en "\n`date`" >> $LOG_FILE
 verify_course
 determine_project_name
 if [ "$ADD" = true ] ; then
-    echo "Creating project: $PROJECTNAME ;  USERNAME= $USERNAME" >> $LOG_FILE
-    project_provision
-    app_provision
+    if [ "$COURSENAME" == "MAP_FOUNDATIONAL" ] ; then
+        createMAPProject 
+    else
+        echo "Creating OSE3 project: $PROJECTNAME ;  USERNAME= $USERNAME" >> $LOG_FILE
+        project_provision
+        app_provision
+    fi
 elif $REMOVE ; then
-    echo "Removing project: $PROJECTNAME for $USERNAME" >> $LOG_FILE
-    oc delete pvc --all -n $PROJECTNAME >> $LOG_FILE
-    oc delete project $PROJECTNAME >> $LOG_FILE
+    if [ "$COURSENAME" == "MAP_FOUNDATIONAL" ] ; then
+        deleteMAPProject 
+    else
+       echo "Removing OSE3 project: $PROJECTNAME for $USERNAME" >> $LOG_FILE
+       oc delete pvc --all -n $PROJECTNAME >> $LOG_FILE
+       oc delete project $PROJECTNAME >> $LOG_FILE
+    fi
 fi
