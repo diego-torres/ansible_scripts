@@ -148,58 +148,47 @@ app_provision() {
 
 
 createMAPProject() {
-    TEST_USER=jbride
-    USER_EMAIL="jbride\@redhat.com";
-    USER_FULL_NAME="Jeff Bride";
+    USER_EMAIL=jbride2000@gmail.com
     DEBUG=false
 
-    echo "$TEST_USER : Creating MAP project: $PROJECTNAME" >> $LOG_FILE
-    eval queryResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "username":"${TEST_USER}" }' https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/read`
+    echo "$USERNAME : Creating MAP project: $PROJECTNAME" >> $LOG_FILE
+    eval queryResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "username":"'$USERNAME'" }' https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/read`
 
-    if [[ $DEBUG == true ]]; then echo -en "$TEST_USER : DEBUG queryResponse = $queryResponse\n" >> $LOG_FILE;  fi
+    if [[ $DEBUG == true ]]; then echo -en "$USERNAME : DEBUG queryResponse = $queryResponse\n" >> $LOG_FILE;  fi
 
     if [[ $queryResponse == *"User not found"* ]]; then
 
-        echo "$TEST_USER : User does not exist in MAP Core.  Will now create" >> $LOG_FILE
 
-        eval postResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d'{ "username":"${TEST_USER}", "email":"jbride200@gmail.com", "name":"${USER_FULL_NAME}", "invite":true}' https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/create`
+        echo "$USERNAME : User does not exist in MAP Core.  Will now create with email = $USER_EMAIL" >> $LOG_FILE
 
-        # User with email address already exists for this customer
-        # status:ok
-
-        # eval queryResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" \
-        #   -d'{ "username":${TEST_USER}, "email":${USER_EMAIL}, "name":${USER_FULL_NAME}, "invite":true}' \
-        #   https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/create`
+        eval postResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d'{ "username":"'$USERNAME'", "email":"'$USER_EMAIL'", "name":"'$USERNAME'", "invite":true}' \
+            "https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/create"`
 
     	if [[ $postResponse == *"status:error"* ]]
         then
-    	    echo -en "$TEST_USER : Error postResponse = $postResponse\n" >> $LOG_FILE
+    	    echo -en "$USERNAME : Error postResponse = $postResponse\n" >> $LOG_FILE
             exit 1;
         fi
 
-        echo -en "$TEST_USER : postResponse = $postResponse\n" >> $LOG_FILE;
+        echo -en "$USERNAME : postResponse = $postResponse\n" >> $LOG_FILE;
 
     elif [[ $queryResponse = *"status:ok"* ]]; then
-        echo -en "$TEST_USER : MAP user already found; Completing\n" >> $LOG_FILE
+        echo -en "$USERNAME : MAP user already found; Completing\n" >> $LOG_FILE
     else 
-        echo -en "$TEST_USER : ERROR querying for user = $queryResponse\n" >> $LOG_FILE;
+        echo -en "$USERNAME : ERROR querying for user = $queryResponse\n" >> $LOG_FILE;
         exit 1;
     fi
 
 }
 
 deleteMAPProject() {
-    TEST_USER=jbride
-    USER_EMAIL="jbride\@redhat.com";
-    USER_FULL_NAME="Jeff Bride";
-    DEBUG=true
 
-    echo "$TEST_USER : Deleting MAP project: $PROJECTNAME " >> $LOG_FILE
-    eval deleteResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "username": "${TEST_USER}" }' \
+    echo "$USERNAME : Deleting MAP user " >> $LOG_FILE
+    eval deleteResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "username": "'$USERNAME'" }' \
       "https://gpte.us.training.redhatmobile.com/box/srv/1.1/admin/user/delete"`
 
     if [[ $deleteResponse != *"status:ok"* ]]; then
-        echo -en "$TEST_USER : ERROR deleting user. Response = $deleteResponse\n" >> $LOG_FILE;
+        echo -en "$USERNAME : ERROR deleting user. Response = $deleteResponse\n" >> $LOG_FILE;
         exit 1;
     fi
 }
