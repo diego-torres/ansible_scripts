@@ -1,0 +1,2 @@
+simplesmtp_install_dir: "{{lab_home_dir}}/simple-smtp"
+simplesmtp_distro: simple-smtp

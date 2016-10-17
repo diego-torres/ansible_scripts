@@ -1,0 +1,9 @@
+jbds_install_dir: "{{lab_home_dir}}"
+jbds_install_script_dir: jbds
+jbds_resources_dir: resources
+jbds_configuration_dir: configuration
+jbds_install_script: install-jbds-instance.sh
+jbds_root: jbdevstudio
+jbds_distro: jboss-devstudio-8.1.0.GA-installer-standalone.jar
+jbds_integration_stack_distro: jbdevstudio-integration-stack-updatesite-8.0.3.GA.zip
+jbds_install_config: jbds-install-config.xml

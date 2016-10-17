@@ -1,0 +1,41 @@
+---
+
+- name: Create installation target directory
+  file: path={{jbds_install_dir}} state=directory owner={{user}} group={{user}}
+
+- name: Create installation directory
+  file: path={{install_script_dir}}/{{jbds_install_script_dir}} state=directory mode=0755
+
+- name : Copy installation scripts
+  template: src={{item}} dest={{install_script_dir}}/{{jbds_install_script_dir}}
+  with_items:
+    - install/{{jbds_install_script}}
+
+- name: Create installation resources directory
+  file: path={{install_script_dir}}/{{jbds_install_script_dir}}/{{jbds_configuration_dir}} state=directory mode=0755
+
+- name : Copy configuration files
+  copy: src={{item}} dest={{install_script_dir}}/{{jbds_install_script_dir}}/{{jbds_configuration_dir}}
+  with_items:
+    - install/configuration/jbds-install-config.xml
+
+- name: Create installation resources directory
+  file: path={{install_script_dir}}/{{jbds_install_script_dir}}/{{jbds_resources_dir}} state=directory mode=0755
+
+- name: Copy JBDS distro
+  copy: src={{jbds_distro}} dest={{install_script_dir}}/{{jbds_install_script_dir}}/{{jbds_resources_dir}}/{{jbds_distro}}
+
+- name: Copy JBDS Integration Pack distro
+  copy: src={{jbds_integration_stack_distro}} dest={{install_script_dir}}/{{jbds_install_script_dir}}/{{jbds_resources_dir}}/{{jbds_integration_stack_distro}}
+
+- name: Set file permissions
+  file: 
+    path={{install_script_dir}}/{{jbds_install_script_dir}}/{{item}}
+    mode=0775
+  with_items:
+    - "{{jbds_install_script}}"
+
+- name: Copy main installation script template
+  template: src={{item}}  dest={{lab_home_dir}} owner={{user}} group={{user}} mode=0755
+  with_items:
+    - install/install-jbds.sh

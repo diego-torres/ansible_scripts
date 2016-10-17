@@ -1,0 +1,7 @@
+soapui_install_dir: "{{lab_home_dir}}"
+soapui_install_script_dir: soapui
+soapui_resources_dir: resources
+soapui_distro: SoapUI-5.2.1-linux-bin.tar.gz
+soapui_root: soapui
+soapui_root_orig: SoapUI-5.2.1
+soapui_marker_file: "{{soapui_install_dir}}/{{soapui_root}}/bin/soapui.sh"

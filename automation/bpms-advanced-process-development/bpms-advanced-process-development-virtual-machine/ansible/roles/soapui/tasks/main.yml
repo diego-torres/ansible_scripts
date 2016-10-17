@@ -1,0 +1,40 @@
+---
+
+- name: Create installation target directory
+  file: path={{soapui_install_dir}} state=directory owner={{user}} group={{user}}
+
+- name: Create installation directory
+  file: path={{install_script_dir}}/{{soapui_install_script_dir}} state=directory mode=0755
+
+- name : Copy Installation files
+  template: src={{item}} dest={{install_script_dir}}/{{soapui_install_script_dir}}
+  with_items:
+    - install/install-soapui.sh
+
+- name: Set file permissions
+  file: 
+    path={{install_script_dir}}/{{soapui_install_script_dir}}/{{item}}
+    mode=0775
+  with_items:
+    - install-soapui.sh
+
+- name: Create installation resources directory
+  file: path={{install_script_dir}}/{{soapui_install_script_dir}}/{{soapui_resources_dir}} state=directory mode=0755
+
+- name: Copy SoapUI distro
+  copy: src={{soapui_distro}} dest={{install_script_dir}}/{{soapui_install_script_dir}}/{{soapui_resources_dir}}/{{soapui_distro}}
+
+- name: Install SoapUI
+  shell: 
+    '{{install_script_dir}}/{{soapui_install_script_dir}}/install-soapui.sh creates={{soapui_marker_file}}'
+  become: yes
+  become_user: "{{user}}"
+
+- name: Copy SoapUI settings file
+  copy: src=soapui-settings.xml dest={{home_dir}} owner={{user}} group={{user}}
+
+- name: Copy SoapUI workspace file
+  copy: src=default-soapui-workspace.xml dest={{home_dir}} owner={{user}} group={{user}}
+
+- name: Set file permissions soapui executable
+  file: path={{soapui_install_dir}}/{{soapui_root}}/bin/soapui.sh mode=0755

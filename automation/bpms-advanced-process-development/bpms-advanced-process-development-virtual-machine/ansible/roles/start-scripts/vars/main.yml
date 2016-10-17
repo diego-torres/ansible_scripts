@@ -1,0 +1,4 @@
+bpms_root: bpms
+jbds_root: jbdevstudio
+soapui_root: soapui
+mysqlddl_install_script_dir: mysql-ddl

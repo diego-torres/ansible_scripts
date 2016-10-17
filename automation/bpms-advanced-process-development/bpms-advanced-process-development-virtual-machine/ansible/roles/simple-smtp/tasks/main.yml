@@ -1,0 +1,17 @@
+---
+
+- name: Create installation target directory
+  file: path={{simplesmtp_install_dir}} state=directory owner={{user}} group={{user}}
+
+- name: Copy simple-smtp binary
+  copy: src={{simplesmtp_distro}} dest={{simplesmtp_install_dir}}
+
+- name: Set file owner
+  file: path={{simplesmtp_install_dir}}/simple-smtp owner={{user}} group={{user}}
+
+- name: Set file permissions
+  file: 
+    path={{simplesmtp_install_dir}}/{{item}}
+    mode=0775
+  with_items:
+    - simple-smtp

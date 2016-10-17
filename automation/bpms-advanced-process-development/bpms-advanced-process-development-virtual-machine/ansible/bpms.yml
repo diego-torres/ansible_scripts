@@ -1,0 +1,25 @@
+- hosts: bpms-advanced-process-development
+  remote_user: root
+
+  roles:
+    - update
+    - yum-clean
+    - reboot
+    - epel
+    - guest-additions
+    - useradd
+    - mate
+    - selinux
+    - tools
+    - zerofree
+    - java
+    - mariadb
+    - mariadb-bpms-schema
+    - bpms
+    - jbds
+    - maven
+    - maven-repo
+    - soapui
+    - simple-smtp
+    - start-scripts
+    - yum-clean

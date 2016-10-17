@@ -1,0 +1,42 @@
+---
+
+- name: Create installation target directory
+  file: path={{mvn_install_dir}} state=directory owner={{user}} group={{user}}
+
+- name: Create installation directory
+  file: path={{install_script_dir}}/{{mvn_install_script_dir}} state=directory mode=0755
+
+- name : Copy installation script
+  template: src={{item}} dest={{install_script_dir}}/{{mvn_install_script_dir}}
+  with_items:
+    - install/install-mvn.sh
+
+- name: Create installation configuration directory
+  file: path={{install_script_dir}}/{{mvn_install_script_dir}}/{{mvn_configuration_dir}} state=directory mode=0755
+
+- name : Copy configuration files
+  copy: src={{item}} dest={{install_script_dir}}/{{mvn_install_script_dir}}/{{mvn_configuration_dir}}
+  with_items:
+    - install/configuration/mvn-settings.xml
+
+- name: Set file permissions
+  file: 
+    path={{install_script_dir}}/{{mvn_install_script_dir}}/{{item}} 
+    mode=0775
+  with_items:
+    - install-mvn.sh
+
+- name: Create installation resources directory
+  file: path={{install_script_dir}}/{{mvn_install_script_dir}}/{{mvn_resources_dir}} state=directory mode=0755
+
+- name: Copy Maven distro
+  copy: src={{mvn_distro}} dest={{install_script_dir}}/{{mvn_install_script_dir}}/{{mvn_resources_dir}}/{{mvn_distro}}
+
+- name: Install Maven
+  shell: 
+    '{{install_script_dir}}/mvn/install-mvn.sh creates={{mvn_marker_file}}'
+  become: yes
+  become_user: "{{user}}"
+
+- name: Set file permissions mvn executable
+  file: path={{mvn_install_dir}}/{{mvn_root}}/bin/mvn mode=0755
