@@ -1,7 +1,4 @@
-user: jboss
-lab_home_dir: /home/jboss/lab
 rhsso_install_dir: /home/jboss/lab
-install_script_dir: /opt/install/scripts
 rhsso_install_script_dir: rhsso
 rhsso_resources_dir: resources
 rhsso_configuration_dir: configuration

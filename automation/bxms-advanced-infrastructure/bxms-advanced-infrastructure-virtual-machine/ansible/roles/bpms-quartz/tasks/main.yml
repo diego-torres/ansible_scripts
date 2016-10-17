@@ -3,7 +3,7 @@
 - name: Create bpms quartz installation directory
   file: path={{install_script_dir}}/{{bpms_quartz_install_script_dir}} state=directory mode=0755
 
-- name : Copy ddl files
+- name : Copy quartz properties file
   copy: src={{item}} dest={{install_script_dir}}/{{bpms_quartz_install_script_dir}}
   with_items:
     - quartz.properties

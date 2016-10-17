@@ -3,7 +3,7 @@
 SCRIPT_DIR=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
 IP_ADDR=127.0.0.1
-RESOURCES_DIR=$SCRIPT_DIR/resources
+RESOURCES_DIR=$SCRIPT_DIR/{{bpms_resources_dir}}
 EAP_DISTRO={{eap_distro}}
 EAP=$RESOURCES_DIR/$EAP_DISTRO
 BPMS_DISTRO={{bpms_distro}}
@@ -14,6 +14,7 @@ BPMS_ROOT_ORIG={{bpms_root_orig}}
 BPMS_DATA_DIR=$BPMS_HOME/$BPMS_ROOT/data
 REPO_DIR=bpms-repo
 MYSQL_DRIVER={{bpms_mysql_driver}}
+MYSQL_DRIVER_PATH={{bpms_mysql_driver_path}}
 
 # Defaults
 DASHBOARD=${DASHBOARD:-true}
@@ -31,8 +32,19 @@ KIE_SERVER_BYPASS_AUTH_USER=${KIE_SERVER_BYPASS_AUTH_USER:-false}
 KIE_SERVER_CONTROLLER=${KIE_SERVER_CONTROLLER:-false}
 KIE_SERVER_MANAGED=${KIE_SERVER_MANAGED:-false}
 
+# Database
+DATABASE=mysql
+
 # MySql schema
 MYSQL_BPMS_SCHEMA=${MYSQL_BPMS_SCHEMA:-bpms}
+
+# Hosts & Ports
+if [ "x$BIND_ADDRESS" == "x" ]
+then
+  BIND_ADDRESS=$IP_ADDR
+fi
+KIE_SERVER_PORT=${KIE_SERVER_PORT:-8080}
+BUSINESS_CENTRAL_PORT=${BUSINESS_CENTRAL_PORT:-8080}
 
 echo "BUSINESS_CENTRAL=$BUSINESS_CENTRAL"
 echo "KIE_SERVER=$KIE_SERVER"
@@ -74,11 +86,11 @@ else
     exit 255
 fi
 
-if [ -f $MYSQL_DRIVER ];
+if [ -f $MYSQL_DRIVER_PATH/$MYSQL_DRIVER ];
 then
-    echo "$MYSQL_DRIVER installed"
+    echo "File $MYSQL_DRIVER_PATH/$MYSQL_DRIVER installed"
 else
-    echo "File $MYSQL_DRIVER not installed. Please install with yum"
+    echo "File $MYSQL_DRIVER_PATH/$MYSQL_DRIVER not installed. Please install with yum"
     exit 255
 fi
 
@@ -163,9 +175,9 @@ mkdir -p $BPMS_DATA_DIR/$REPO_DIR
 # Server settings
 echo "Set system properties"
 echo $'\n' >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-echo "JAVA_OPTS=\"\$JAVA_OPTS -Djboss.bind.address=0.0.0.0\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-echo "JAVA_OPTS=\"\$JAVA_OPTS -Djboss.bind.address.management=0.0.0.0\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-echo "JAVA_OPTS=\"\$JAVA_OPTS -Djboss.bind.address.insecure=0.0.0.0\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+echo "JAVA_OPTS=\"\$JAVA_OPTS -Djboss.bind.address=$BIND_ADDRESS\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+echo "JAVA_OPTS=\"\$JAVA_OPTS -Djboss.bind.address.management=$BIND_ADDRESS\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+echo "JAVA_OPTS=\"\$JAVA_OPTS -Djboss.bind.address.insecure=$BIND_ADDRESS\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Djboss.node.name=server-$IP_ADDR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 
 if [ "x$JBOSS_PORT_OFFSET" != "x" ]
@@ -183,8 +195,8 @@ if [ "$BUSINESS_CENTRAL" = "true" ]
 then
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.nio.git.ssh.enabled=true\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.nio.git.daemon.enabled=true\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.nio.git.daemon.host=0.0.0.0\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.nio.git.ssh.host=0.0.0.0\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.nio.git.daemon.host=$BIND_ADDRESS\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.nio.git.ssh.host=$BIND_ADDRESS\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.api.userManagementServices=WildflyCLIUserManagementService\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.wildfly.cli.host=localhost\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.wildfly.cli.port=9999\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
@@ -235,22 +247,14 @@ fi
 KIE_SERVER_CONTROLLER_IP=$IP_ADDR
 if [ "$KIE_SERVER" = "true" -a "$KIE_SERVER_MANAGED" = "true" ] 
 then
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller=http://${KIE_SERVER_CONTROLLER_IP}:8080/business-central/rest/controller\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller=http://${KIE_SERVER_CONTROLLER_IP}:${BUSINESS_CENTRAL_PORT}/business-central/rest/controller\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller.user=kieserver\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller.pwd=kieserver1!\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 elif [ "$KIE_SERVER" = "true" ]
 then
-  echo "#JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller=http://${KIE_SERVER_CONTROLLER_IP}:8080/business-central/rest/controller\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+  echo "#JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller=http://${KIE_SERVER_CONTROLLER_IP}:${BUSINESS_CENTRAL_PORT}/business-central/rest/controller\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "#JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller.user=kieserver\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "#JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller.pwd=kieserver1!\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-
 fi
-
-# quartz properties
-#echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.quartz.properties=${BPMS_HOME}/${BPMS_ROOT}/standalone/configuration/quartz.properties\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-
-# kie-server persistence settings
-#echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.persistence.ds=java:jboss/datasources/jbpmDS\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-#echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.persistence.dialect=org.hibernate.dialect.MySQL5Dialect\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 
 exit 0

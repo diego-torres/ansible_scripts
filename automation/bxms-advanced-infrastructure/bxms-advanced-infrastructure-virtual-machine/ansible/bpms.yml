@@ -14,7 +14,6 @@
     - zerofree
     - java
     - mariadb
-    - yum-clean
     - maven
     - maven-repo
     - bpms
@@ -23,3 +22,5 @@
     - rhsso
     - rhsso-adapter
     - rhsso-import
+    - oc
+    - yum-clean

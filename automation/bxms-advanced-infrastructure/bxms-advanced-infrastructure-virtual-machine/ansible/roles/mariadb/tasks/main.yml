@@ -4,14 +4,14 @@
   yum: name=mariadb-server state=present
 
 - name: Create installation directory
-  file: path={{install_script_dir}}/mysql state=directory mode=0755
+  file: path={{install_script_dir}}/{{mysql_install_script_dir}} state=directory mode=0755
 
 - name : Copy installation files
-  copy: src=install/ dest={{install_script_dir}}/mysql
+  copy: src=install/ dest={{install_script_dir}}/{{mysql_install_script_dir}}
 
 - name: Set file permissions
   file: 
-    path={{install_script_dir}}/mysql/{{item}} 
+    path={{install_script_dir}}/{{mysql_install_script_dir}}/{{item}} 
     mode=0775
   with_items:
     - run-mysqld.sh
@@ -19,7 +19,7 @@
 
 - name: Configure Mariadb
   shell: 
-    '{{install_script_dir}}/mysql/run-mysqld.sh >> {{install_script_dir}}/mysqld-install-log.txt
+    '{{install_script_dir}}/{{mysql_install_script_dir}}/run-mysqld.sh >> {{install_script_dir}}/mysqld-install-log.txt
     creates={{install_script_dir}}/mysqld-install-log.txt'
   environment:
     MYSQL_LOWER_CASE_TABLE_NAMES: 1

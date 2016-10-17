@@ -2,14 +2,14 @@
 
 SCRIPT_DIR=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
-HOME_DIR=/home/jboss
-LAB_DIR=$HOME_DIR/lab
-RESOURCES_DIR=$SCRIPT_DIR/resources
-CONFIGURATION_DIR=$SCRIPT_DIR/configuration
-MVN_DISTRO=apache-maven-3.2.5-bin.zip
+HOME_DIR=/home/{{user}}
+LAB_DIR={{lab_home_dir}}
+RESOURCES_DIR=$SCRIPT_DIR/{{mvn_resources_dir}}
+CONFIGURATION_DIR=$SCRIPT_DIR/{{mvn_configuration_dir}}
+MVN_DISTRO={{mvn_distro}}
 MVN=$RESOURCES_DIR/$MVN_DISTRO
-MVN_ROOT_DIR=apache-maven-3.2.5
-MVN_INSTALL_DIR=$LAB_DIR/mvn
+MVN_ROOT_DIR={{mvn_root}}
+MVN_INSTALL_DIR={{mvn_install_dir}}
 MVN_SETTINGS=$CONFIGURATION_DIR/mvn-settings.xml
 
 
@@ -54,14 +54,4 @@ function install_mvn {
 check_prerequisites
 install_mvn
 
-echo "Change owner to user jboss"
-chmod 755 $MVN_INSTALL_DIR/$MVN_ROOT_DIR/bin/mvn
-chown -R jboss:jboss $MVN_INSTALL_DIR
-chown -R jboss:jboss $HOME_DIR/.m2
-
 exit 0
-
-
-
-
-

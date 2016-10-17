@@ -31,6 +31,10 @@ The following binary files must be added to the playbook, to the `files` directo
 ** `rh-sso-7.0.0.zip`
 * Role `rhsso-adapter` :
 ** `rh-sso-7.0.0-eap6-adapter.zip`
+* Role `maven`
+** `apache-maven-3.2.5-bin.zip`
+* Role `oc`
+** `oc version 3.2.0.44`
 
 === Maven repository
 

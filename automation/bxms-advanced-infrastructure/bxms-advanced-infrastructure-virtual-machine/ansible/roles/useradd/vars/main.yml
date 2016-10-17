@@ -1,4 +1,2 @@
-user: jboss
-
 #created python -c 'import crypt; print crypt.crypt("jboss", "jboss")'
 password: jbVTTUBazW/Tg

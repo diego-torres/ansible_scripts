@@ -1,4 +1,2 @@
-user: jboss
-install_script_dir: /opt/install/scripts
 rhsso_install_script_dir: rhsso
 rhsso_import_dir: import

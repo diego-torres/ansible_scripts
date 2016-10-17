@@ -8,6 +8,7 @@ export MYSQL_BPMS_SCHEMA=bpmsbc
 export DASHBOARD=true
 export KIE_SERVER=false
 export BUSINESS_CENTRAL=true
+export BIND_ADRESS=0.0.0.0
 
 {{install_script_dir}}/{{bpms_install_script_dir}}/{{bpms_install_script}}
 
@@ -19,5 +20,6 @@ export MYSQL_BPMS_SCHEMA=bpmskieserver
 export DASHBOARD=false
 export KIE_SERVER=true
 export BUSINESS_CENTRAL=false
+export BIND_ADRESS=0.0.0.0
 
 {{install_script_dir}}/{{bpms_install_script_dir}}/{{bpms_install_script}}

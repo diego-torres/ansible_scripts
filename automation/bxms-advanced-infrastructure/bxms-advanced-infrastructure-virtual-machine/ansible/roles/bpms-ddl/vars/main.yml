@@ -1,3 +1,1 @@
-user: jboss
-install_script_dir: /opt/install/scripts
 bpms_ddl_install_script_dir: bpms/ddl
