@@ -1,4 +1,4 @@
-bpms_install_dir: "{{lab_home_dir}}"
+bpms_install_dir: "{{lab_home_dir}}/bpms"
 bpms_install_script_dir: bpms
 bpms_resources_dir: resources
 bpms_install_script: install-bpms-instance.sh
