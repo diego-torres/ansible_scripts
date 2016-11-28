@@ -8,5 +8,8 @@
   become: yes
   become_user: "{{user}}"
 
+- name: Set ownership of maven repository
+  file: path=/home/{{user}}/.m2/repository owner={{user}} group={{user}}
+
 - name: Enable 'requiretty' in /etc/sudoers
   lineinfile: dest=/etc/sudoers line='Defaults    requiretty' state=present
