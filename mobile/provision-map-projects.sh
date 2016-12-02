@@ -5,7 +5,7 @@
 #     ./provision-map-projects.sh -r --user=jbride-redhat.com --course=MAP_FOUNDATIONAL                                  :   Deletes MAP_FOUNDATIONAL course using userId = jbride-redhat.com
 
 #   ADMIN NOTES:
-#   This script is installed at:  ?
+#   This script is installed at:  labs00.opentlc.com:/root/OPEN_virtual/mobile
 #   It is invoked by CloudForms.  The CloudForms log file can be viewed as followed:
 #       1)  ssh <userId>@labs.opentlc.com
 #       2)  tail -n 50 /var/www/miq/vmdb/log/automation.log
