@@ -25,8 +25,8 @@
 The following binary files must be added to the playbook, to the `files` directory of the role:
 
 * Role `bpms` :
-** `jboss-bpmssuite-6.3.0.GA-redhat-4-deployable-eap6.x.zip`
-** `jboss-eap-6.4.7-full-build.zip`
+** `jboss-bpmsuite-6.4.0.GA-deployable-eap7.x.zip`
+** `jboss-eap-7.0.0.zip`
 * Role `jbds` :
 ** `jbdevstudio-integration-stack-updatesite-8.0.3.GA.zip`
 ** `jboss-devstudio-8.1.0.GA-installer-standalone.jar`
@@ -37,13 +37,13 @@ The following binary files must be added to the playbook, to the `files` directo
 
 === Maven repository
 
-The `maven-repo` role seeds the Maven repository on the virtual machine by copying the contents of `files/repository` to `/home/jboss/.m2/repository` on the virtual machine.
+The `maven-repo` role seeds the Maven repository on the virtual machine by copying the contents of `ansible/repository` to `/home/jboss/.m2/repository` on the virtual machine.
 
-The `files/repository` directory is initially empty. It can be manually poulated with `rsync` from a virtual machine instance on which the labs have been executed. We are working on a mechanism to have it automatically populated.
+The `ansible/repository` directory is initially empty. It can be manually poulated with `rsync` from a virtual machine instance on which the labs have been executed. We are working on a mechanism to have it automatically populated.
 
 === Inventory file
 
-Copy the `hosts.example` file to `hosts`, and replace `<ip address of virtual machine>` with the IP address of the virtual machine.
+In the `ansible` directory, copy the `hosts.example` file to `hosts`, and replace `<ip address of virtual machine>` with the IP address of the virtual machine.
 
 === Provisioning
 
