@@ -1,0 +1,11 @@
+---
+
+- firewalld:
+    port: 8080/tcp
+    permanent: true
+    state: enabled
+
+- firewalld:
+    port: 9990/tcp
+    permanent: true
+    state: enabled

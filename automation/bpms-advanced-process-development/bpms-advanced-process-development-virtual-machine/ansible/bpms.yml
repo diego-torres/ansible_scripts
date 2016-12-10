@@ -5,6 +5,7 @@
     - update
     - yum-clean
     - reboot
+    - firewalld
     - epel
     - guest-additions
     - useradd
