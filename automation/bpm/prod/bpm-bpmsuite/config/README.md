@@ -1,1 +1,0 @@
-Place here configuration files, scripts, etc to use in the docker image
