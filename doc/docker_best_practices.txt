@@ -8,7 +8,8 @@ source:  https://developerblog.redhat.com/2016/02/24/10-things-to-avoid-in-docke
 
 6) Don’t use only the “latest” tag – The latest tag is just like the “SNAPSHOT” for Maven users. 
     Tags are encouraged to be used specially when you have a layered filesytem. 
-    You don’t want to have surprises when you build your image 2 months later and figure out that your application can’t run because a top layer was replaced by a new version that it’s not backward compatible or because a wrong “latest” version is in the build cache. The latest should also be avoided when deploying containers in production.
+    You don’t want to have surprises when you build your image 2 months later and figure out that your application can’t run because a top layer was replaced by a new version that it’s not backward compatible or because a wrong “latest” version is in the build cache.
+    The latest should also be avoided when deploying containers in production.
 
 7) Don’t run more than one process in a single container – 
     Containers are perfect to run a single process (http daemon, application server, database), but if you have more than a single process, you will have troubles to manage, get logs, and update them individually.
