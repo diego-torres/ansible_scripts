@@ -1,0 +1,108 @@
+# Entry 1: cn=admin,ou=groups,dc=acme,dc=org
+dn: cn=admin,ou=groups,dc=acme,dc=org
+cn: admin
+member: uid=admin1,ou=users,dc=acme,dc=org
+objectclass: groupOfNames
+objectclass: top
+
+# Entry 2: cn=Administrators,ou=groups,dc=acme,dc=org
+dn: cn=Administrators,ou=groups,dc=acme,dc=org
+cn: Administrators
+member: uid=busadmin,ou=users,dc=acme,dc=org
+objectclass: groupOfNames
+objectclass: top
+
+# Entry 3: cn=analyst,ou=groups,dc=acme,dc=org
+dn: cn=analyst,ou=groups,dc=acme,dc=org
+cn: analyst
+member: uid=admin1,ou=users,dc=acme,dc=org
+member: uid=busadmin,ou=users,dc=acme,dc=org
+objectclass: groupOfNames
+objectclass: top
+
+# Entry 4: cn=kie-server,ou=groups,dc=acme,dc=org
+dn: cn=kie-server,ou=groups,dc=acme,dc=org
+cn: kie-server
+member: uid=admin1,ou=users,dc=acme,dc=org
+member: uid=kieserver,ou=users,dc=acme,dc=org
+member: uid=busadmin,ou=users,dc=acme,dc=org
+member: uid=user1,ou=users,dc=acme,dc=org
+member: uid=user10,ou=users,dc=acme,dc=org
+member: uid=user11,ou=users,dc=acme,dc=org
+member: uid=user12,ou=users,dc=acme,dc=org
+member: uid=user2,ou=users,dc=acme,dc=org
+member: uid=user20,ou=users,dc=acme,dc=org
+member: uid=user21,ou=users,dc=acme,dc=org
+member: uid=user22,ou=users,dc=acme,dc=org
+member: uid=user3,ou=users,dc=acme,dc=org
+member: uid=user30,ou=users,dc=acme,dc=org
+member: uid=user31,ou=users,dc=acme,dc=org
+member: uid=user32,ou=users,dc=acme,dc=org
+objectclass: groupOfNames
+objectclass: top
+
+# Entry 5: cn=kiemgmt,ou=groups,dc=acme,dc=org
+dn: cn=kiemgmt,ou=groups,dc=acme,dc=org
+cn: kiemgmt
+member: uid=admin1,ou=users,dc=acme,dc=org
+objectclass: groupOfNames
+objectclass: top
+
+# Entry 6: cn=rest-all,ou=groups,dc=acme,dc=org
+dn: cn=rest-all,ou=groups,dc=acme,dc=org
+cn: rest-all
+member: uid=admin1,ou=users,dc=acme,dc=org
+member: uid=busadmin,ou=users,dc=acme,dc=org
+member: uid=kieserver,ou=users,dc=acme,dc=org
+objectclass: groupOfNames
+objectclass: top
+
+# Entry 7: cn=user,ou=groups,dc=acme,dc=org
+dn: cn=user,ou=groups,dc=acme,dc=org
+cn: user
+member: uid=admin1,ou=users,dc=acme,dc=org
+member: uid=busadmin,ou=users,dc=acme,dc=org
+member: uid=user1,ou=users,dc=acme,dc=org
+member: uid=user10,ou=users,dc=acme,dc=org
+member: uid=user11,ou=users,dc=acme,dc=org
+member: uid=user12,ou=users,dc=acme,dc=org
+member: uid=user2,ou=users,dc=acme,dc=org
+member: uid=user20,ou=users,dc=acme,dc=org
+member: uid=user21,ou=users,dc=acme,dc=org
+member: uid=user22,ou=users,dc=acme,dc=org
+member: uid=user3,ou=users,dc=acme,dc=org
+member: uid=user30,ou=users,dc=acme,dc=org
+member: uid=user31,ou=users,dc=acme,dc=org
+member: uid=user32,ou=users,dc=acme,dc=org
+objectclass: groupOfNames
+objectclass: top
+
+# Entry 8: cn=group1,ou=groups,dc=acme,dc=org
+dn: cn=group1,ou=groups,dc=acme,dc=org
+cn: group1
+member: uid=user1,ou=users,dc=acme,dc=org
+member: uid=user10,ou=users,dc=acme,dc=org
+member: uid=user11,ou=users,dc=acme,dc=org
+member: uid=user12,ou=users,dc=acme,dc=org
+objectclass: groupOfNames
+objectclass: top
+
+# Entry 9: cn=group2,ou=groups,dc=acme,dc=org
+dn: cn=group2,ou=groups,dc=acme,dc=org
+cn: group2
+member: uid=user2,ou=users,dc=acme,dc=org
+member: uid=user20,ou=users,dc=acme,dc=org
+member: uid=user21,ou=users,dc=acme,dc=org
+member: uid=user22,ou=users,dc=acme,dc=org
+objectclass: groupOfNames
+objectclass: top
+
+# Entry 10: cn=group3,ou=groups,dc=acme,dc=org
+dn: cn=group3,ou=groups,dc=acme,dc=org
+cn: group3
+member: uid=user3,ou=users,dc=acme,dc=org
+member: uid=user30,ou=users,dc=acme,dc=org
+member: uid=user31,ou=users,dc=acme,dc=org
+member: uid=user32,ou=users,dc=acme,dc=org
+objectclass: groupOfNames
+objectclass: top
