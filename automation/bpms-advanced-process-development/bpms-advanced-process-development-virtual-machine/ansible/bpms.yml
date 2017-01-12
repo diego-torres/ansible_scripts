@@ -2,26 +2,4 @@
   remote_user: root
 
   roles:
-    - update
-    - yum-clean
-    - reboot
-    - firewalld
-    - epel
-    - guest-additions
-    - useradd
-    - mate
-    - selinux
-    - tools
-    - zerofree
-    - java
-    - mariadb
-    - mariadb-bpms-schema
-    - mariadb-pquote-reporting-schema
     - bpms
-    - jbds
-    - maven
-    - maven-repo
-    - soapui
-    - simple-smtp
-    - start-scripts
-    - yum-clean

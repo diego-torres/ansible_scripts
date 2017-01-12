@@ -18,6 +18,7 @@
   template: src={{item}} dest={{install_script_dir}}/{{bpms_install_script_dir}}
   with_items:
     - install/scripts/mysql-bpms-datasource-config.xml
+    - install/scripts/mysql-pquote-reporting-datasource-config.xml
     - install/scripts/mysql-driver-config.xml
     - install/scripts/mysql-module.xml
     - install/scripts/mysql-quartz-datasource-config.xml

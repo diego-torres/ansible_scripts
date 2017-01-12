@@ -40,6 +40,7 @@ DATABASE=mysql
 
 # MySql schema
 MYSQL_BPMS_SCHEMA=${MYSQL_BPMS_SCHEMA:-bpms}
+MYSQL_PQUOTE_REPORTING_SCHEMA=${MYSQL_PQUOTE_REPORTING_SCHEMA:-pquote_reporting}
 
 # Quartz
 QUARTZ=${QUARTZ:-true}
@@ -215,11 +216,14 @@ BPMS_DATASOURCE=$(cat $SCRIPT_DIR/$DATABASE-bpms-datasource-config.xml)
 # configuration : Quartz datasource
 QUARTZ_DATASOURCE=$(cat $SCRIPT_DIR/$DATABASE-quartz-datasource-config.xml)
 
+# configuration : pquote_reporting datasource
+PQUOTE_REPORTING_DATASOURCE=$(cat $SCRIPT_DIR/$DATABASE-pquote-reporting-datasource-config.xml)
+
 if [ "$QUARTZ" = "true" ];
 then
-  DATASOURCE=$BPMS_DATASOURCE$'\n'$QUARTZ_DATASOURCE
+  DATASOURCE=$BPMS_DATASOURCE$'\n'$PQUOTE_REPORTING_DATASOURCE$'\n'$QUARTZ_DATASOURCE
 else
-  DATASOURCE=$BPMS_DATASOURCE
+  DATASOURCE=$BPMS_DATASOURCE$'\n'$PQUOTE_REPORTING_DATASOURCE
 fi
 sed -i -e ':a' -e '$!{N;ba' -e '}' -e "s/$(quoteRe "<!-- ##DATASOURCES## -->")/$(quoteSubst "$DATASOURCE")/" $BPMS_HOME/$BPMS_ROOT/standalone/configuration/standalone.xml
 
@@ -265,6 +269,7 @@ fi
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.host.ip=$IP_ADDR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.host.port=3306\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.bpms.schema=$MYSQL_BPMS_SCHEMA\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.pquote_reporting.schema=$MYSQL_PQUOTE_REPORTING_SCHEMA\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 
 # business-central
 if [ "$BUSINESS_CENTRAL" = "true" ]
