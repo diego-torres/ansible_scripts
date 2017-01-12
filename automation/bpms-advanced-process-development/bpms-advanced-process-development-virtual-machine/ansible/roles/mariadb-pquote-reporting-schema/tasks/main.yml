@@ -1,0 +1,22 @@
+---
+
+- name: Ensure Mariadb is started
+  service: name=mariadb state=started
+
+- name: Create installation directory
+  file: path={{install_script_dir}}/{{mysqlddl_install_script_dir}} state=directory mode=0755
+
+- name : Copy installation files
+  copy: src=install/ dest={{install_script_dir}}/{{mysqlddl_install_script_dir}}
+
+- name: Set file permissions
+  file: 
+    path={{install_script_dir}}/{{mysqlddl_install_script_dir}}/{{item}} 
+    mode=0775
+  with_items:
+    - run-mysqld.sh
+
+- name: Install pquote_reporting schema in Mariadb
+  shell: 
+    '{{install_script_dir}}/{{mysqlddl_install_script_dir}}/run-mysqld.sh >> {{install_script_dir}}/mysqld-pquote-reporting-log.txt
+    creates={{install_script_dir}}/mysqld-pquote-reporting-log.txt'
