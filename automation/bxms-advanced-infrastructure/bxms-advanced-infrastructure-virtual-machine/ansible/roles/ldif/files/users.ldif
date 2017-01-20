@@ -1,0 +1,194 @@
+# Entry 1: uid=admin1,ou=users,dc=acme,dc=org - password admin
+dn: uid=admin1,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: BPMS Administrator
+description: BPMS Administrator
+mail: admin1@acme.org
+preferredLanguage: en-UK
+sn: Administrator
+uid: admin1
+userPassword:: e01ENX1JU012S1hwWHBhZERpVW9PU29BZnd3PT0=
+
+# Entry 2: uid=kieserver,ou=users,dc=acme,dc=org - password kieserver1!
+dn: uid=kieserver,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: KieServer
+mail: kieserver@acme.org
+sn: KieServer
+uid: kieserver
+userPassword:: e01ENX02aVBpQW94T2w1RDBYeVNCdmhuQWF3PT0=
+
+# Entry 3: uid=busadmin,ou=users, dc=acme,dc=org -password busadmin
+dn: uid=busadmin,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: John Wallace
+mail: busadmin@acme.org
+preferredLanguage: en-UK
+sn: Wallace
+uid: busadmin
+userPassword:: e01ENX1jOU9EWVlZQnQyajlIRW9rejRNV1JRPT0=
+
+# Entry 4: uid=user1,ou=users,dc=acme,dc=org - password user
+dn: uid=user1,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User One
+mail: user1@acme.org
+preferredLanguage: en-UK
+sn: One
+uid: user1
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=
+
+# Entry 5: uid=user10,ou=users,dc=acme,dc=org - password user
+dn: uid=user10,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User Ten
+mail: user10@acme.org
+preferredLanguage: en-UK
+sn: Ten
+uid: user10
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=
+
+# Entry 6: uid=user11,ou=users,dc=acme,dc=org - password user
+dn: uid=user11,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User Eleven
+mail: user11@acme.org
+preferredLanguage: en-UK
+sn: Eleven
+uid: user11
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=
+
+# Entry 7: uid=user12,ou=users,dc=acme,dc=org - password user
+dn: uid=user12,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User Twelve
+mail: user12@acme.org
+preferredLanguage: en-UK
+sn: Twelve
+uid: user12
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=
+
+# Entry 8: uid=user2,ou=users,dc=acme,dc=org - password user
+dn: uid=user2,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User Two
+mail: user2@acme.org
+preferredLanguage: en-UK
+sn: Two
+uid: user2
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=
+
+# Entry 9: uid=user20,ou=users,dc=acme,dc=org - password user
+dn: uid=user20,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User Twenty
+mail: user20@acme.org
+preferredLanguage: en-UK
+sn: Twenty
+uid: user20
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=
+
+# Entry 10: uid=user21,ou=users,dc=acme,dc=org - password user
+dn: uid=user21,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User Twentyone
+mail: user21@acme.org
+preferredLanguage: en-UK
+sn: Twentyone
+uid: user21
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=
+
+# Entry 11: uid=user22,ou=users,dc=acme,dc=org - password user
+dn: uid=user22,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User Twentytwo
+mail: user22@acme.org
+preferredLanguage: en-UK
+sn: Twentytwo
+uid: user22
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=
+
+# Entry 12: uid=user3,ou=users,dc=acme,dc=org - password user
+dn: uid=user3,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User Three
+mail: user3@acme.org
+preferredLanguage: en-UK
+sn: Three
+uid: user3
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=
+
+# Entry 13: uid=user30,ou=users,dc=acme,dc=org - password user
+dn: uid=user30,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User Thirty
+mail: user30@acme.org
+preferredLanguage: en-UK
+sn: Thirty
+uid: user30
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=
+
+# Entry 14: uid=user31,ou=users,dc=acme,dc=org - password user
+dn: uid=user31,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User Thirtyone
+mail: user31@acme.org
+preferredLanguage: en-UK
+sn: Thirtyone
+uid: user31
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=
+
+# Entry 15: uid=user32,ou=users,dc=acme,dc=org - password user
+dn: uid=user32,ou=users,dc=acme,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: User Thirtytwo
+mail: user32@acme.org
+preferredLanguage: en-UK
+sn: Thirtytwo
+uid: user32
+userPassword:: e01ENX03aEhMc1pCUzVBc0hxc0RLQmd3ajdnPT0=

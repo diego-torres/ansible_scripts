@@ -1,0 +1,41 @@
+
+---
+
+- name: Install OpenLdap
+  yum: name=nss-pam-ldapd,openldap-servers,openldap-clients state=present
+
+- name: Create installation directory
+  file: path={{install_script_dir}}/{{openldap_install_script_dir}} state=directory mode=0755
+
+- name : Copy installation files
+  copy: src=install/ dest={{install_script_dir}}/{{openldap_install_script_dir}}
+
+- name: Set file permissions
+  file: 
+    path={{install_script_dir}}/{{openldap_install_script_dir}}/{{item}} 
+    mode=0775
+  with_items:
+    - configure-openldap.sh
+
+- name: Configure OpenLdap
+  shell: 
+    '{{install_script_dir}}/{{openldap_install_script_dir}}/configure-openldap.sh >> {{install_script_dir}}/openldap-install-log.txt
+    creates={{install_script_dir}}/openldap-install-log.txt'
+  environment:
+    LDAP_CONFIG_PASSWORD: admin
+    LDAP_ADMIN_PASSWORD: admin
+    LDAP_BIND_CN: admin
+    LDAP_BASE_DN: dc=acme,dc=org
+    LDAP_ORGANISATION: "ACME Inc."
+    LDAP_DOMAIN: acme
+
+- name: Enable TLS URI
+  replace: 
+    dest=/etc/sysconfig/slapd regexp='^SLAPD_URLS="ldapi:/// ldap:///"$' replace='SLAPD_URLS="ldapi:/// ldap:/// ldaps:///"'  
+    backup=true
+
+- name: Start Openldap
+  service: name=slapd state=started
+
+- name: Enable Openldap
+  service: name=slapd enabled=yes

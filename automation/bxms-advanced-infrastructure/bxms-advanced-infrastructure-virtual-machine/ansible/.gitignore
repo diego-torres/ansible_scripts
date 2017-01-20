@@ -9,5 +9,6 @@ roles/simple-smtp/files/simple-smtp
 roles/rhsso/files/rh-sso-7.0.0.zip
 roles/rhsso-adapter/files/rh-sso-7.0.0-eap6-adapter.zip
 roles/oc/files/oc
+roles/jxplorer/files/jxplorer-3.3.1.2-project.zip
 hosts
 *.tmp
