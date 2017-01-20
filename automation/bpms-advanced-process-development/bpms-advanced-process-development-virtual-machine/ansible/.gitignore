@@ -1,5 +1,5 @@
-roles/bpms/files/jboss-bpmsuite-6.3.0.GA-redhat-4-deployable-eap6.x.zip
-roles/bpms/files/jboss-eap-6.4.7-full-build.zip
+roles/bpms/files/jboss-bpmsuite-6.4.0.GA-deployable-eap7.x.zip
+roles/bpms/files/jboss-eap-7.0.0.zip
 roles/jbds/files/jbdevstudio-integration-stack-updatesite-8.0.3.GA.zip
 roles/jbds/files/jboss-devstudio-8.1.0.GA-installer-standalone.jar
 roles/maven-repo/files/
@@ -8,3 +8,4 @@ roles/soapui/files/SoapUI-5.2.1-linux-bin.tar.gz
 hosts
 *.tmp
 *.retry
+repository/*

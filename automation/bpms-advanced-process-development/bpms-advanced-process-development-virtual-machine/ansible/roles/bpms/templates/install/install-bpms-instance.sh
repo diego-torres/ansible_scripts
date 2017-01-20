@@ -2,7 +2,9 @@
 
 SCRIPT_DIR=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
-IP_ADDR=127.0.0.1
+# Allow remote clients to access services executing within this EAP runtime
+IP_ADDR=0.0.0.0
+
 RESOURCES_DIR=$SCRIPT_DIR/{{bpms_resources_dir}}
 EAP_DISTRO={{eap_distro}}
 EAP=$RESOURCES_DIR/$EAP_DISTRO
@@ -237,6 +239,10 @@ echo "Configure business-central persistence.xml"
 sed -i s/java:jboss\\/datasources\\/ExampleDS/java:jboss\\/datasources\\/jbpmDS/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/business-central.war/WEB-INF/classes/META-INF/persistence.xml
 sed -i s/org.hibernate.dialect.H2Dialect/org.hibernate.dialect.MySQL5Dialect/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/business-central.war/WEB-INF/classes/META-INF/persistence.xml
 
+# Configure JEE default datasource
+echo "Configure default datasource in standalone.xml"
+sed -i s/java:jboss\\/datasources\\/ExampleDS/java:jboss\\/datasources\\/jbpmDS/ $BPMS_HOME/$BPMS_ROOT/standalone/configuration/standalone.xml
+
 # Configure persistence in dashboard app
 echo "Configure persistence Dashboard app"
 sed -i s/java:jboss\\/datasources\\/ExampleDS/java:jboss\\/datasources\\/jbpmDS/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/jboss-web.xml
@@ -268,8 +274,13 @@ then
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.nio.git.daemon.host=$BIND_ADDRESS\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.nio.git.ssh.host=$BIND_ADDRESS\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.api.userManagementServices=WildflyCLIUserManagementService\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.wildfly.cli.host=$IP_ADDR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.wildfly.cli.port=9999\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+
+  # Getting the following error at startup when $IP_ADDR = 0.0.0.0
+  # ERROR [org.uberfire.ext.security.management.wildfly10.cli.Wildfly10ModelUtil] (default task-13) Error reading realm using CLI commands.: java.io.IOException: java.net.ConnectException: WFLYPRT0053: Could not connect to http-remoting://0.0.0.0:9990. The connection failed
+  #echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.wildfly.cli.host=$IP_ADDR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.wildfly.cli.host=localhost\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.wildfly.cli.port=9990\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.guvnor.m2repo.dir=$BPMS_DATA_DIR/m2/repository\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.nio.git.dir=$BPMS_DATA_DIR/$REPO_DIR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.metadata.index.dir=$BPMS_DATA_DIR/$REPO_DIR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
@@ -299,6 +310,7 @@ then
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.bypass.auth.user=$KIE_SERVER_BYPASS_AUTH_USER\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.persistence.ds=java:jboss/datasources/jbpmDS\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.persistence.dialect=org.hibernate.dialect.MySQL5Dialect\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.executor.jms.queue=queue/KIE.SERVER.EXECUTOR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 fi
 
 # kie-server with bypass auth user
