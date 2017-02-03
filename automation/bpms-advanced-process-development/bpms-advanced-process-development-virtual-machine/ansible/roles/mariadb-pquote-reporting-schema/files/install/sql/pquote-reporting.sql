@@ -70,7 +70,7 @@ CREATE TABLE `DIM_MONTHS`
   `month_name` varchar(32) not null comment 'Full month name with year',
   `numeric_month` varchar(7)  comment 'YYYY-MM',
   `month` varchar(2)  comment 'MM',
-  `year` varchar(2)  comment 'YYYY',
+  `year` varchar(4)  comment 'YYYY',
   primary key (month_id)
 );
 
@@ -389,4 +389,4 @@ BEGIN
 END //
 DELIMITER ;
 CALL prc_generate_month_mocks();
-CALL prc_generate_mocks(1500);
+CALL prc_generate_mocks(15000);
