@@ -64,6 +64,16 @@ values
 (NULL, 'Wisconsin', 'WI'),
 (NULL, 'Wyoming', 'WY');
 
+CREATE TABLE `DIM_MONTHS`
+(
+  `month_id`   smallint    unsigned not null auto_increment comment 'PK: Month ID',
+  `month_name` varchar(32) not null comment 'Full month name with year',
+  `numeric_month` varchar(7)  comment 'YYYY-MM',
+  `month` varchar(2)  comment 'MM',
+  `year` varchar(2)  comment 'YYYY',
+  primary key (month_id)
+);
+
 CREATE TABLE `FACT_QUOTES`
   (
     `age`  int(11) NOT NULL,
@@ -78,12 +88,12 @@ CREATE TABLE `FACT_QUOTES`
     `priceDiscount` int(11) NOT NULL,
     `vehicleYear` int(11) NOT NULL,
     `processInstanceId` int(11) NOT NULL,
-    `quote_month` int(11) NOT NULL,
-    `quote_year` int(11) NOT NULL,
+    `quote_month` smallint unsigned NOT NULL REFERENCES `DIM_MONTHS`.`month_id` ON DELETE CASCADE,
     `purchased` bit(1) NOT NULL DEFAULT 0,
     `bounced` bit(1) NOT NULL DEFAULT 0,
+    `bounce_reason` varchar(10),
     `bounced_price` bit(1) NOT NULL DEFAULT 0,
-    `bounced_beneffits` bit(1) NOT NULL DEFAULT 0,
+    `bounced_benefits` bit(1) NOT NULL DEFAULT 0,
     `bounced_terms` bit(1) NOT NULL DEFAULT 0,
     `bounced_service` bit(1) NOT NULL DEFAULT 0,
     `bounced_other` bit(1) NOT NULL DEFAULT 0
@@ -91,10 +101,10 @@ CREATE TABLE `FACT_QUOTES`
 
 CREATE TABLE `FACT_INCIDENTS`
   (
-    `incident_month`  INT(11) NOT NULL,
-    `incident_year` INT(11) NOT NULL,
+    `incident_month` smallint unsigned NOT NULL REFERENCES `DIM_MONTHS`.`month_id` ON DELETE CASCADE,
     `driver_age` INT(11) NOT NULL,
     `policy_age_months` INT(11) NOT NULL,
+    `incident_reason` VARCHAR(20) NOT NULL,
     `reason_texting` bit(1) NOT NULL DEFAULT 0,
     `reason_calling` bit(1) NOT NULL DEFAULT 0,
     `reason_eating` bit(1) NOT NULL DEFAULT 0,
@@ -109,6 +119,7 @@ CREATE TABLE `FACT_INCIDENTS`
     `reason_missed_signal` bit(1) NOT NULL DEFAULT 0,
     `reason_other` bit(1) NOT NULL DEFAULT 0,
     `state_id` smallint NOT NULL REFERENCES `DIM_STATES`(`state_id`) ON DELETE CASCADE,
+    `driver_age_classification` VARCHAR(5) NOT NULL,
     `driver_young` bit(1) NOT NULL DEFAULT 0,
     `driver_adult` bit(1) NOT NULL DEFAULT 0,
     `driver_elder` bit(1) NOT NULL DEFAULT 0
@@ -150,7 +161,7 @@ BEGIN
 
   DECLARE lBounced BIT;
   DECLARE lBounceReasonCode TINYINT;
-  SET lBounceReasonCode = randomRangePicker(0,9);
+  DECLARE lBounceReason VARCHAR(10);
   SET lBounced = 0;
 
   SET lAgeMin = 16;
@@ -166,29 +177,46 @@ BEGIN
       END;
   END CASE;
 
-  INSERT INTO FACT_QUOTES(
-      age,
-      creditScore,
-      dlnumber,
-      driverName,
-      numberOfAccidents,
-      numberOfTickets,
-      ssn,
-      policyType,
-      price,
-      priceDiscount,
-      vehicleYear,
-      processInstanceId,
-      quote_month,
-      quote_year,
-      purchased,
-      bounced,
-      bounced_price,
-      bounced_beneffits,
-      bounced_terms,
-      bounced_service,
-      bounced_other)
-  VALUES(
+  SET lBounceReasonCode = 0;
+  IF lBounced = 1 THEN
+    SET lBounceReasonCode = randomRangePicker(0,100);
+    CASE
+      WHEN lBounceReasonCode <= 5 THEN
+        SET lBounceReason = 'other';
+      WHEN lBounceReasonCode > 5 AND lBounceReasonCode <= 10 THEN
+        SET lBounceReason = 'service';
+      WHEN lBounceReasonCode > 10 AND lBounceReasonCode <= 20 THEN
+        SET lBounceReason = 'price';
+      WHEN lBounceReasonCode > 20 AND lBounceReasonCode <= 30 THEN
+        SET lBounceReason = 'terms';
+      ELSE
+        SET lBounceReason = 'benefits';
+    END CASE;
+  END IF;
+
+  INSERT INTO `FACT_QUOTES` (
+    `age`,
+    `creditScore`,
+    `dlNumber`,
+    `driverName`,
+    `numberOfAccidents`,
+    `numberOfTickets`,
+    `ssn`,
+    `policyType`,
+    `price`,
+    `priceDiscount`,
+    `vehicleYear`,
+    `processInstanceId`,
+    `quote_month`,
+    `purchased`,
+    `bounced`,
+    `bounce_reason`,
+    `bounced_price`,
+    `bounced_benefits`,
+    `bounced_terms`,
+    `bounced_service`,
+    `bounced_other`
+  ) VALUES (
     lAge,
     randomRangePicker(250, 750),
     CONCAT('DL', randomRangePicker(1000, 10000)),
@@ -201,15 +229,15 @@ BEGIN
     randomRangePicker(0,25),
     randomRangePicker(2007, 2017),
     idx,
-    randomRangePicker(1,12),
-    randomRangePicker(2015,2016),
+    randomRangePicker(1,24),
     CASE WHEN lBounced = 0 THEN 1 ELSE 0 END,
     lBounced,
-    CASE WHEN lBounceReasonCode <= 1 AND lBounced = 1 THEN 1 ELSE 0 END,
-    CASE WHEN lBounceReasonCode <= 2 AND lBounceReasonCode > 1 AND lBounced = 1 THEN 1 ELSE 0 END,
-    CASE WHEN lBounceReasonCode <= 5 AND lBounceReasonCode > 1 AND lBounced = 1 THEN 1 ELSE 0 END,
-    CASE WHEN lBounceReasonCode > 5 AND lBounceReasonCode < 9 AND lBounced = 1 THEN 1 ELSE 0 END,
-    CASE WHEN lBounceReasonCode = 9 AND lBounced = 1 THEN 1 ELSE 0 END
+    lBounceReason,
+    CASE WHEN lBounceReason = 'price' AND lBounced = 1 THEN 1 ELSE 0 END,
+    CASE WHEN lBounceReason = 'benefits' AND lBounced = 1 THEN 1 ELSE 0 END,
+    CASE WHEN lBounceReason = 'terms' AND lBounced = 1 THEN 1 ELSE 0 END,
+    CASE WHEN lBounceReason = 'service' AND lBounced = 1 THEN 1 ELSE 0 END,
+    CASE WHEN lBounceReason = 'other' AND lBounced = 1 THEN 1 ELSE 0 END
   );
 END //
 CREATE PROCEDURE prc_generate_incidents_mock()
@@ -220,18 +248,47 @@ BEGIN
   DECLARE lAge INT;
 
   DECLARE lIncidentCode INT;
+  DECLARE lIncidentReason VARCHAR(20);
 
   SET lAgeMin = 16;
   SET lAgeMax = 80;
   SET lAge = randomRangePicker(lAgeMin, lAgeMax);
 
-  SET lIncidentCode = randomRangePicker(0,30);
+  SET lIncidentCode = randomRangePicker(0,100);
+  CASE
+    WHEN lIncidentCode <= 2 THEN
+      SET lIncidentReason = 'other';
+    WHEN lIncidentCode > 2 AND lIncidentCode <= 5 THEN
+      SET lIncidentReason = 'illness';
+    WHEN lIncidentCode > 5 AND lIncidentCode <= 8 THEN
+      SET lIncidentReason = 'road visibility';
+    WHEN lIncidentCode > 8 AND lIncidentCode <= 13 THEN
+      SET lIncidentReason = 'eating';
+    WHEN lIncidentCode > 13 AND lIncidentCode <= 15 THEN
+      SET lIncidentReason = 'missed signal';
+    WHEN lIncidentCode > 15 AND lIncidentCode <= 20 THEN
+      SET lIncidentReason = 'intoxicated';
+    WHEN lIncidentCode > 20 AND lIncidentCode <= 25 THEN
+      SET lIncidentReason = 'calling';
+    WHEN lIncidentCode > 25 AND lIncidentCode <= 30 THEN
+      SET lIncidentReason = 'chatting';
+    WHEN lIncidentCode > 35 AND lIncidentCode <= 40 THEN
+      SET lIncidentReason = 'drinking';
+    WHEN lIncidentCode > 40 AND lIncidentCode <= 45 THEN
+      SET lIncidentReason = 'weather';
+    WHEN lIncidentCode > 45 AND lIncidentCode <= 50 THEN
+      SET lIncidentReason = 'wrong road signals';
+    WHEN lIncidentCode > 50 AND lIncidentCode <= 55 THEN
+      SET lIncidentReason = 'mechanical failure';
+    ELSE
+      SET lIncidentReason = 'texting';
+  END CASE;
 
-  INSERT INTO `FACT_INCIDENTS`
-  (`incident_month`,
-    `incident_year`,
+  INSERT INTO `FACT_INCIDENTS` (
+    `incident_month`,
     `driver_age`,
     `policy_age_months`,
+    `incident_reason`,
     `reason_texting`,
     `reason_calling`,
     `reason_eating`,
@@ -246,36 +303,79 @@ BEGIN
     `reason_missed_signal`,
     `reason_other`,
     `state_id`,
+    `driver_age_classification`,
     `driver_young`,
     `driver_adult`,
-    `driver_elder`)
-  VALUES(
-    randomRangePicker(1,12),
-    randomRangePicker(2015,2016),
+    `driver_elder`
+  ) VALUES (
+    randomRangePicker(1,24),
     lAge,
     randomRangePicker(1,72),
-    CASE WHEN lIncidentCode <= 3 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode <= 5 AND lIncidentCode > 3 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode <= 7 AND lIncidentCode > 5 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode <= 9 AND lIncidentCode > 7 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode <= 11 AND lIncidentCode > 9 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode <= 15 AND lIncidentCode > 11 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode <= 18 AND lIncidentCode > 15 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode <= 20 AND lIncidentCode > 18 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode <= 22 AND lIncidentCode > 20 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode <= 24 AND lIncidentCode > 22 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode <= 26 AND lIncidentCode > 24 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode <= 29 AND lIncidentCode > 26 THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentCode = 30 THEN 1 ELSE 0 END,
+    lIncidentReason,
+    CASE WHEN lIncidentReason = 'texting' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'calling' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'eating' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'chatting' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'drinking' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'intoxicated' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'illness' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'weather' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'wrong road signals' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'road visibility' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'mechanical failure' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'missed signal' THEN 1 ELSE 0 END,
+    CASE WHEN lIncidentReason = 'other' THEN 1 ELSE 0 END,
     randomRangePicker(1,50),
+    CASE WHEN lAge < 25 THEN 'young' WHEN lAge >= 25 AND lAge < 65 THEN 'adult' ELSE 'elder' END,
     CASE WHEN lAge < 25 THEN 1 ELSE 0 END,
     CASE WHEN lAge >= 25 AND lAge < 65 THEN 1 ELSE 0 END,
     CASE WHEN lAge >= 65 THEN 1 ELSE 0 END
   );
 END //
+CREATE PROCEDURE prc_generate_month_mocks()
+BEGIN
+  DECLARE i INT;
+  DECLARE lMonth DATE;
+  DECLARE lMonthOffset INT;
+
+  DELETE FROM `DIM_MONTHS`
+  WHERE `month_id` > 0;
+  TRUNCATE `DIM_MONTHS`;
+
+  SET i = 0;
+
+  label_m: LOOP
+    SET i = i + 1;
+    IF i <= 24 THEN
+      SET lMonthOffset = i - 25;
+      SET lMonth = DATE_ADD(CURDATE(), INTERVAL lMonthOffset MONTH);
+      INSERT INTO `DIM_MONTHS`
+      (
+        `month_name`,
+        `numeric_month`,
+        `month`,
+        `year`
+      ) VALUES (
+        CONCAT_WS('-', YEAR(lMonth), MONTHNAME(lMonth)),
+        CONCAT_WS('-', YEAR(lMonth), CASE WHEN MONTH(lMonth)<10 THEN CONCAT('0', MONTH(lMonth)) ELSE MONTH(lMonth) END),
+        MONTH(lMonth),
+        YEAR(lMonth)
+      );
+      ITERATE label_m;
+    END IF;
+    LEAVE label_m;
+  END LOOP label_m;
+END //
 CREATE PROCEDURE prc_generate_mocks (IN records INT)
 BEGIN
   DECLARE i INT;
+  DECLARE lAreMonths SMALLINT;
+
+  SELECT COUNT(month_id) INTO lAreMonths FROM `DIM_MONTHS`;
+  IF lAreMonths = 0 THEN
+    CALL prc_generate_month_mocks();
+  END IF;
+
   SET i = 0;
   label_q: LOOP
     SET i = i + 1;
@@ -286,7 +386,7 @@ BEGIN
     END IF;
     LEAVE label_q;
   END LOOP label_q;
-  SET i = 0;
 END //
 DELIMITER ;
+CALL prc_generate_month_mocks();
 CALL prc_generate_mocks(1500);
