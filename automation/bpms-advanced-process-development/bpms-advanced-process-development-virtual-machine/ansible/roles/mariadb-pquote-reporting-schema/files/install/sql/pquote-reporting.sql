@@ -91,12 +91,7 @@ CREATE TABLE `FACT_QUOTES`
     `quote_month` smallint unsigned NOT NULL REFERENCES `DIM_MONTHS`.`month_id` ON DELETE CASCADE,
     `purchased` bit(1) NOT NULL DEFAULT 0,
     `bounced` bit(1) NOT NULL DEFAULT 0,
-    `bounce_reason` varchar(10),
-    `bounced_price` bit(1) NOT NULL DEFAULT 0,
-    `bounced_benefits` bit(1) NOT NULL DEFAULT 0,
-    `bounced_terms` bit(1) NOT NULL DEFAULT 0,
-    `bounced_service` bit(1) NOT NULL DEFAULT 0,
-    `bounced_other` bit(1) NOT NULL DEFAULT 0
+    `bounce_reason` varchar(10)
 );
 
 CREATE TABLE `FACT_INCIDENTS`
@@ -105,24 +100,8 @@ CREATE TABLE `FACT_INCIDENTS`
     `driver_age` INT(11) NOT NULL,
     `policy_age_months` INT(11) NOT NULL,
     `incident_reason` VARCHAR(20) NOT NULL,
-    `reason_texting` bit(1) NOT NULL DEFAULT 0,
-    `reason_calling` bit(1) NOT NULL DEFAULT 0,
-    `reason_eating` bit(1) NOT NULL DEFAULT 0,
-    `reason_chatting` bit(1) NOT NULL DEFAULT 0,
-    `reason_drinking` bit(1) NOT NULL DEFAULT 0,
-    `reason_intoxicated` bit(1) NOT NULL DEFAULT 0,
-    `reason_illness` bit(1) NOT NULL DEFAULT 0,
-    `reason_weather` bit(1) NOT NULL DEFAULT 0,
-    `reason_wrong_road_signals` bit(1) NOT NULL DEFAULT 0,
-    `reason_road_visibility` bit(1) NOT NULL DEFAULT 0,
-    `reason_mechanical_failure` bit(1) NOT NULL DEFAULT 0,
-    `reason_missed_signal` bit(1) NOT NULL DEFAULT 0,
-    `reason_other` bit(1) NOT NULL DEFAULT 0,
     `state_id` smallint NOT NULL REFERENCES `DIM_STATES`(`state_id`) ON DELETE CASCADE,
-    `driver_age_classification` VARCHAR(5) NOT NULL,
-    `driver_young` bit(1) NOT NULL DEFAULT 0,
-    `driver_adult` bit(1) NOT NULL DEFAULT 0,
-    `driver_elder` bit(1) NOT NULL DEFAULT 0
+    `driver_age_classification` VARCHAR(5) NOT NULL
 );
 
 DELIMITER //
@@ -210,12 +189,7 @@ BEGIN
     `quote_month`,
     `purchased`,
     `bounced`,
-    `bounce_reason`,
-    `bounced_price`,
-    `bounced_benefits`,
-    `bounced_terms`,
-    `bounced_service`,
-    `bounced_other`
+    `bounce_reason`
   ) VALUES (
     lAge,
     randomRangePicker(250, 750),
@@ -232,27 +206,34 @@ BEGIN
     randomRangePicker(1,24),
     CASE WHEN lBounced = 0 THEN 1 ELSE 0 END,
     lBounced,
-    lBounceReason,
-    CASE WHEN lBounceReason = 'price' AND lBounced = 1 THEN 1 ELSE 0 END,
-    CASE WHEN lBounceReason = 'benefits' AND lBounced = 1 THEN 1 ELSE 0 END,
-    CASE WHEN lBounceReason = 'terms' AND lBounced = 1 THEN 1 ELSE 0 END,
-    CASE WHEN lBounceReason = 'service' AND lBounced = 1 THEN 1 ELSE 0 END,
-    CASE WHEN lBounceReason = 'other' AND lBounced = 1 THEN 1 ELSE 0 END
+    lBounceReason
   );
 END //
 CREATE PROCEDURE prc_generate_incidents_mock()
 BEGIN
 
-  DECLARE lAgeMin INT;
-  DECLARE lAgeMax INT;
   DECLARE lAge INT;
+  DECLARE lAgeClassification VARCHAR(5);
+  DECLARE lAgeClassificationK INT;
 
   DECLARE lIncidentCode INT;
   DECLARE lIncidentReason VARCHAR(20);
 
-  SET lAgeMin = 16;
-  SET lAgeMax = 80;
-  SET lAge = randomRangePicker(lAgeMin, lAgeMax);
+  SET lAgeClassificationK = randomRangePicker(0, 100);
+
+  -- 15% adults
+  -- 40% elder
+  -- 55% young
+  CASE
+    WHEN lAgeClassificationK <= 15 THEN
+      SET lAge = randomRangePicker(25, 65);
+    WHEN lAgeClassificationK > 15 AND lAgeClassificationK <= 40 THEN
+      SET lAge = randomRangePicker(66, 80);
+    ELSE
+      SET lAge = randomRangePicker(16, 24);
+  END CASE;
+
+  SET lAgeClassification = CASE WHEN lAge < 25 THEN 'young' WHEN lAge >= 25 AND lAge < 65 THEN 'adult' ELSE 'elder' END;
 
   SET lIncidentCode = randomRangePicker(0,100);
   CASE
@@ -265,11 +246,11 @@ BEGIN
     WHEN lIncidentCode > 8 AND lIncidentCode <= 13 THEN
       SET lIncidentReason = 'eating';
     WHEN lIncidentCode > 13 AND lIncidentCode <= 15 THEN
-      SET lIncidentReason = 'missed signal';
+      SET lIncidentReason = CASE lAgeClassification WHEN 'elder' THEN 'calling' WHEN 'adult' THEN 'texting' ELSE 'missed signal' END;
     WHEN lIncidentCode > 15 AND lIncidentCode <= 20 THEN
       SET lIncidentReason = 'intoxicated';
     WHEN lIncidentCode > 20 AND lIncidentCode <= 25 THEN
-      SET lIncidentReason = 'calling';
+      SET lIncidentReason = CASE lAgeClassification WHEN 'elder' THEN 'texting' WHEN 'adult' THEN 'missed signal' ELSE 'calling' END;
     WHEN lIncidentCode > 25 AND lIncidentCode <= 30 THEN
       SET lIncidentReason = 'chatting';
     WHEN lIncidentCode > 35 AND lIncidentCode <= 40 THEN
@@ -281,7 +262,7 @@ BEGIN
     WHEN lIncidentCode > 50 AND lIncidentCode <= 55 THEN
       SET lIncidentReason = 'mechanical failure';
     ELSE
-      SET lIncidentReason = 'texting';
+      SET lIncidentReason = CASE lAgeClassification WHEN 'elder' THEN 'missed signal' WHEN 'adult' THEN 'calling' ELSE 'texting' END;
   END CASE;
 
   INSERT INTO `FACT_INCIDENTS` (
@@ -289,47 +270,15 @@ BEGIN
     `driver_age`,
     `policy_age_months`,
     `incident_reason`,
-    `reason_texting`,
-    `reason_calling`,
-    `reason_eating`,
-    `reason_chatting`,
-    `reason_drinking`,
-    `reason_intoxicated`,
-    `reason_illness`,
-    `reason_weather`,
-    `reason_wrong_road_signals`,
-    `reason_road_visibility`,
-    `reason_mechanical_failure`,
-    `reason_missed_signal`,
-    `reason_other`,
     `state_id`,
-    `driver_age_classification`,
-    `driver_young`,
-    `driver_adult`,
-    `driver_elder`
+    `driver_age_classification`
   ) VALUES (
     randomRangePicker(1,24),
     lAge,
     randomRangePicker(1,72),
     lIncidentReason,
-    CASE WHEN lIncidentReason = 'texting' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'calling' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'eating' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'chatting' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'drinking' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'intoxicated' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'illness' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'weather' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'wrong road signals' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'road visibility' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'mechanical failure' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'missed signal' THEN 1 ELSE 0 END,
-    CASE WHEN lIncidentReason = 'other' THEN 1 ELSE 0 END,
     randomRangePicker(1,50),
-    CASE WHEN lAge < 25 THEN 'young' WHEN lAge >= 25 AND lAge < 65 THEN 'adult' ELSE 'elder' END,
-    CASE WHEN lAge < 25 THEN 1 ELSE 0 END,
-    CASE WHEN lAge >= 25 AND lAge < 65 THEN 1 ELSE 0 END,
-    CASE WHEN lAge >= 65 THEN 1 ELSE 0 END
+    CASE WHEN lAge < 25 THEN 'young' WHEN lAge >= 25 AND lAge < 65 THEN 'adult' ELSE 'elder' END
   );
 END //
 CREATE PROCEDURE prc_generate_month_mocks()

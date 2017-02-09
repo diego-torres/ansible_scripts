@@ -12,4 +12,3 @@ mysql --user=root <<EOSQL
 EOSQL
 
 mysql --user=jboss --password=jboss pquote_reporting < $SCRIPT_DIR/sql/pquote-reporting.sql
-mysql --user=jboss --password=jboss bpms < $SCRIPT_DIR/sql/pquote_dashbuilder.sql
