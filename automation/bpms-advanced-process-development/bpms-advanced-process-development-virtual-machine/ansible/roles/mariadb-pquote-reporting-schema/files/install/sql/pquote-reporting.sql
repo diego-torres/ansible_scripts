@@ -1,5 +1,3 @@
-DROP TABLE if exists `PQUOTE_REPORTING`;
-
 DROP TABLE if exists `DIM_STATES`;
 
 create table `DIM_STATES`
@@ -64,6 +62,7 @@ values
 (NULL, 'Wisconsin', 'WI'),
 (NULL, 'Wyoming', 'WY');
 
+DROP TABLE if exists `DIM_MONTHS`;
 CREATE TABLE `DIM_MONTHS`
 (
   `month_id`   smallint    unsigned not null auto_increment comment 'PK: Month ID',
@@ -74,6 +73,7 @@ CREATE TABLE `DIM_MONTHS`
   primary key (month_id)
 );
 
+DROP TABLE if exists `FACT_QUOTES`;
 CREATE TABLE `FACT_QUOTES`
   (
     `age`  int(11) NOT NULL,
@@ -94,6 +94,7 @@ CREATE TABLE `FACT_QUOTES`
     `bounce_reason` varchar(10)
 );
 
+DROP TABLE if exists `FACT_INCIDENTS`;
 CREATE TABLE `FACT_INCIDENTS`
   (
     `incident_month` smallint unsigned NOT NULL REFERENCES `DIM_MONTHS`.`month_id` ON DELETE CASCADE,
@@ -105,6 +106,8 @@ CREATE TABLE `FACT_INCIDENTS`
 );
 
 DELIMITER //
+
+DROP FUNCTION if exists `randomRangePicker`;
 CREATE FUNCTION `randomRangePicker`
 (
   minRange INT,
@@ -115,6 +118,7 @@ BEGIN
   SET pick = minRange + FLOOR(RAND() * (maxRange - minRange + 1));
   RETURN pick;
 END //
+DROP FUNCTION if exists `randomSSN`;
 CREATE FUNCTION `randomSSN`
 () RETURNS VARCHAR(9)
 BEGIN
@@ -132,6 +136,7 @@ BEGIN
   END LOOP label_s;
   RETURN ssn;
 END //
+DROP PROCEDURE if exists `prc_generate_quote_mock`;
 CREATE PROCEDURE prc_generate_quote_mock (IN idx INT)
 BEGIN
   DECLARE lAgeMin INT;
@@ -209,6 +214,7 @@ BEGIN
     lBounceReason
   );
 END //
+DROP PROCEDURE if exists `prc_generate_incidents_mock`;
 CREATE PROCEDURE prc_generate_incidents_mock()
 BEGIN
 
@@ -281,6 +287,7 @@ BEGIN
     CASE WHEN lAge < 25 THEN 'young' WHEN lAge >= 25 AND lAge < 65 THEN 'adult' ELSE 'elder' END
   );
 END //
+DROP PROCEDURE if exists `prc_generate_month_mocks`;
 CREATE PROCEDURE prc_generate_month_mocks()
 BEGIN
   DECLARE i INT;
@@ -315,6 +322,7 @@ BEGIN
     LEAVE label_m;
   END LOOP label_m;
 END //
+DROP PROCEDURE if exists `prc_generate_mocks`;
 CREATE PROCEDURE prc_generate_mocks (IN records INT)
 BEGIN
   DECLARE i INT;
@@ -337,5 +345,7 @@ BEGIN
   END LOOP label_q;
 END //
 DELIMITER ;
-CALL prc_generate_month_mocks();
-CALL prc_generate_mocks(15000);
+
+
+#CALL prc_generate_month_mocks();
+#CALL prc_generate_mocks(15000);

@@ -40,6 +40,7 @@ DATABASE=mysql
 
 # MySql schema
 MYSQL_BPMS_SCHEMA=${MYSQL_BPMS_SCHEMA:-bpms}
+MYSQL_DASHBUILDER_SCHEMA=${MYSQL_DASHBUILDER_SCHEMA:-dashbuilder}
 MYSQL_PQUOTE_REPORTING_SCHEMA=${MYSQL_PQUOTE_REPORTING_SCHEMA:-pquote_reporting}
 
 # Quartz
@@ -249,7 +250,10 @@ sed -i s/java:jboss\\/datasources\\/ExampleDS/java:jboss\\/datasources\\/jbpmDS/
 
 # Configure persistence in dashboard app
 echo "Configure persistence Dashboard app"
-sed -i s/java:jboss\\/datasources\\/ExampleDS/java:jboss\\/datasources\\/jbpmDS/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/jboss-web.xml
+sed -i s/java:jboss\\/datasources\\/ExampleDS/java:jboss\\/datasources\\/dashbuilderDS/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/jboss-web.xml
+
+# Edit the following dashbuilder file that defines various out-of-the-box BPM related KPIs
+sed -i s/local/java:jboss\\/datasources\\/jbpmDS/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/jbpmKPIs_v2.kpis
 
 # Set system properties
 # Server settings
@@ -269,6 +273,7 @@ fi
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.host.ip=$IP_ADDR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.host.port=3306\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.bpms.schema=$MYSQL_BPMS_SCHEMA\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.dashbuilder.schema=$MYSQL_DASHBUILDER_SCHEMA\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.pquote_reporting.schema=$MYSQL_PQUOTE_REPORTING_SCHEMA\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 
 # business-central

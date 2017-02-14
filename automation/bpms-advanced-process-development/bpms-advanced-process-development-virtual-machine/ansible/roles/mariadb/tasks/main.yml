@@ -1,7 +1,8 @@
 ---
 
-- name: Install MariaDb
+- name: Install MariaDb and MySQL-python (so as to be able to use  "mysql_user" ansible module)
   yum: name=mariadb-server state=present
+- yum: name=MySQL-python state=present
 
 - name: Create installation directory
   file: path={{install_script_dir}}/{{mysql_install_script_dir}} state=directory mode=0755
