@@ -347,5 +347,5 @@ END //
 DELIMITER ;
 
 
-#CALL prc_generate_month_mocks();
-#CALL prc_generate_mocks(15000);
+CALL prc_generate_month_mocks();
+CALL prc_generate_mocks(15000);
