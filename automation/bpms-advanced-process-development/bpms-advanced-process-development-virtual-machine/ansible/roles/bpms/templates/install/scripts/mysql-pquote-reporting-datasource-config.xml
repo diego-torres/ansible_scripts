@@ -2,8 +2,8 @@
   <connection-url>jdbc:mysql://${mysql.host.ip}:${mysql.host.port}/${mysql.pquote_reporting.schema}?transformedBitIsBoolean=true&amp;sessionVariables=storage_engine=InnoDB</connection-url>
   <driver>mysql</driver>
   <security>
-    <user-name>{{bpms_mysql_user}}</user-name>
-    <password>{{bpms_mysql_password}}</password>
+    <user-name>{{pquote_reporting_mysql_user}}</user-name>
+    <password>{{pquote_reporting_mysql_password}}</password>
   </security>
   <validation>
     <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker"/>

@@ -24,6 +24,9 @@
     - install/scripts/mysql-quartz-datasource-config.xml
     - install/scripts/quartz.properties
     - install/scripts/standalone.xml
+    - install/scripts/export.workspace
+    - install/scripts/kpiExport.kpis
+    - install/scripts/pquote-datasource.datasource
 
 - name: Create installation resources directory
   file: path={{install_script_dir}}/{{bpms_install_script_dir}}/{{bpms_resources_dir}} state=directory mode=0755
@@ -35,7 +38,7 @@
   copy: src={{bpms_distro}} dest={{install_script_dir}}/{{bpms_install_script_dir}}/{{bpms_resources_dir}}/{{bpms_distro}}
 
 - name: Set file permissions
-  file: 
+  file:
     path={{install_script_dir}}/{{bpms_install_script_dir}}/{{item}}
     mode=0775
   with_items:
