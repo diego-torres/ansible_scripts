@@ -92,7 +92,7 @@ If you forgot your password, use the 'Forgot Password' link.\n"
 
     echo -en "$EMESSAGE\n" >> $LOG_FILE
 
-    echo -en $EMESSAGE | mail -s "Login for Red Hat Mobile Application Platform training server - GPTE" -r no-replay@opentlc.com $USER_EMAIL
+    echo -en $EMESSAGE | mail -s "Login for Red Hat Mobile Application Platform training server - GPTE" -r no-reply@opentlc.com $USER_EMAIL
 
     echo -en "DEBUG: Successfully sent email to student: $USER_EMAIL\n" >> $LOG_FILE;
 }
