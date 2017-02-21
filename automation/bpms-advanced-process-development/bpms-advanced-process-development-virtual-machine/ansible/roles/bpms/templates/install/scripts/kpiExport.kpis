@@ -51,7 +51,7 @@ GROUP BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, bounce_reason</query>
     </dataproperties>
   </dataprovider>
   <dataprovider code="dataprovider_62131486578479016" type="sql">
-    <description language="en">`FACT_INCIDENTS`_by_state</description>
+    <description language="en">fact_incidents_by_state</description>
     <sqlprovider>
       <datasource>pquoteReportingDs</datasource>
       <query type="default">SELECT COUNT(*) AS incidents, `DIM_MONTHS`.`year`, `DIM_MONTHS`.month_name, `DIM_STATES`.state_abbr
