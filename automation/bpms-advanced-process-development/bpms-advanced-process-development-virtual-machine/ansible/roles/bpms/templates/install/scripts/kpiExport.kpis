@@ -4,12 +4,12 @@
     <description language="en">fact_bounce_by_reason</description>
     <sqlprovider>
       <datasource>pquoteReportingDs</datasource>
-<query>SELECT dim_months.`year`, dim_months.numeric_month, COUNT(*) AS bounce_count, bounce_reason
-FROM fact_quotes INNER JOIN dim_months ON fact_quotes.quote_month = dim_months.month_id
-WHERE bounced = 1 
-AND {sql_condition, optional, dim_months.`year`, filter_year} 
-AND {sql_condition, optional, dim_months.`numeric_month`, filter_month} 
-GROUP BY dim_months.`year`, dim_months.numeric_month, bounce_reason</query>
+<query>SELECT `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, COUNT(*) AS bounce_count, bounce_reason
+FROM `FACT_QUOTES` INNER JOIN `DIM_MONTHS` ON `FACT_QUOTES`.quote_month = `DIM_MONTHS`.month_id
+WHERE bounced = 1
+AND {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_MONTHS`.`numeric_month`, filter_month}
+GROUP BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, bounce_reason</query>
     </sqlprovider>
     <dataproperties>
       <dataproperty id="year">
@@ -51,26 +51,26 @@ GROUP BY dim_months.`year`, dim_months.numeric_month, bounce_reason</query>
     </dataproperties>
   </dataprovider>
   <dataprovider code="dataprovider_62131486578479016" type="sql">
-    <description language="en">fact_incidents_by_state</description>
+    <description language="en">`FACT_INCIDENTS`_by_state</description>
     <sqlprovider>
       <datasource>pquoteReportingDs</datasource>
-      <query type="default">SELECT COUNT(*) AS incidents, dim_months.`year`, dim_months.month_name, dim_states.state_abbr 
-FROM fact_incidents 
-INNER JOIN dim_states ON fact_incidents.state_id = dim_states.state_id
-INNER JOIN dim_months ON fact_incidents.incident_month = dim_months.month_id
-WHERE {sql_condition, optional, dim_months.`year`, filter_year}
-AND {sql_condition, optional, dim_states.state_abbr, filter_state} 
-AND {sql_condition, optional, dim_months.month_name, filter_month} 
-GROUP BY dim_states.state_abbr, dim_months.`year`, dim_months.month_name
-ORDER BY dim_months.`year`, dim_months.month_name, state_abbr;</query>
-      <query type="mysql">SELECT COUNT(*) AS incidents, dim_months.`year`, dim_months.numeric_month, dim_states.state_abbr, incident_reason, driver_age_classification
-FROM fact_incidents 
-INNER JOIN dim_states ON fact_incidents.state_id = dim_states.state_id
-INNER JOIN dim_months ON fact_incidents.incident_month = dim_months.month_id
-WHERE {sql_condition, optional, dim_months.`year`, filter_year}
-AND {sql_condition, optional, dim_states.state_abbr, filter_state}
-AND {sql_condition, optional, dim_months.numeric_month, filter_month}  
-GROUP BY dim_states.state_abbr, dim_months.`year`, dim_months.numeric_month, incident_reason, driver_age_classification</query>
+      <query type="default">SELECT COUNT(*) AS incidents, `DIM_MONTHS`.`year`, `DIM_MONTHS`.month_name, `DIM_STATES`.state_abbr
+FROM `FACT_INCIDENTS`
+INNER JOIN `DIM_STATES` ON `FACT_INCIDENTS`.state_id = `DIM_STATES`.state_id
+INNER JOIN `DIM_MONTHS` ON `FACT_INCIDENTS`.incident_month = `DIM_MONTHS`.month_id
+WHERE {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_STATES`.state_abbr, filter_state}
+AND {sql_condition, optional, `DIM_MONTHS`.month_name, filter_month}
+GROUP BY `DIM_STATES`.state_abbr, `DIM_MONTHS`.`year`, `DIM_MONTHS`.month_name
+ORDER BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.month_name, state_abbr;</query>
+      <query type="mysql">SELECT COUNT(*) AS incidents, `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, `DIM_STATES`.state_abbr, incident_reason, driver_age_classification
+FROM `FACT_INCIDENTS`
+INNER JOIN `DIM_STATES` ON `FACT_INCIDENTS`.state_id = `DIM_STATES`.state_id
+INNER JOIN `DIM_MONTHS` ON `FACT_INCIDENTS`.incident_month = `DIM_MONTHS`.month_id
+WHERE {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_STATES`.state_abbr, filter_state}
+AND {sql_condition, optional, `DIM_MONTHS`.numeric_month, filter_month}
+GROUP BY `DIM_STATES`.state_abbr, `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, incident_reason, driver_age_classification</query>
     </sqlprovider>
     <dataproperties>
       <dataproperty id="incidents">
@@ -115,16 +115,16 @@ GROUP BY dim_states.state_abbr, dim_months.`year`, dim_months.numeric_month, inc
     <description language="en">fact_monthly_bounce_rate</description>
     <sqlprovider>
       <datasource>pquoteReportingDs</datasource>
-      <query type="default">SELECT dim_months.`year`, dim_months.numeric_month, SUM(bounced)/(SUM(purchased) + SUM(bounced)) * 100 AS bounce_rate
-FROM fact_quotes INNER JOIN dim_months ON fact_quotes.quote_month = dim_months.month_id
-WHERE {sql_condition, optional, dim_months.`year`, filter_year} 
-AND {sql_condition, optional, dim_months.`numeric_month`, filter_month} 
-GROUP BY dim_months.`year`, dim_months.numeric_month</query>
-      <query type="mysql">SELECT dim_months.`year`, dim_months.numeric_month, SUM(bounced)/(SUM(purchased) + SUM(bounced)) * 100 AS bounce_rate
-FROM fact_quotes INNER JOIN dim_months ON fact_quotes.quote_month = dim_months.month_id
-WHERE {sql_condition, optional, dim_months.`year`, filter_year} 
-AND {sql_condition, optional, dim_months.`numeric_month`, filter_month} 
-GROUP BY dim_months.`year`, dim_months.numeric_month</query>
+      <query type="default">SELECT `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, SUM(bounced)/(SUM(purchased) + SUM(bounced)) * 100 AS bounce_rate
+FROM `FACT_QUOTES` INNER JOIN `DIM_MONTHS` ON `FACT_QUOTES`.quote_month = `DIM_MONTHS`.month_id
+WHERE {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_MONTHS`.`numeric_month`, filter_month}
+GROUP BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month</query>
+      <query type="mysql">SELECT `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, SUM(bounced)/(SUM(purchased) + SUM(bounced)) * 100 AS bounce_rate
+FROM `FACT_QUOTES` INNER JOIN `DIM_MONTHS` ON `FACT_QUOTES`.quote_month = `DIM_MONTHS`.month_id
+WHERE {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_MONTHS`.`numeric_month`, filter_month}
+GROUP BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month</query>
     </sqlprovider>
     <dataproperties>
       <dataproperty id="year">
@@ -160,16 +160,16 @@ GROUP BY dim_months.`year`, dim_months.numeric_month</query>
     <description language="en">fact_monthly_sales</description>
     <sqlprovider>
       <datasource>pquoteReportingDs</datasource>
-      <query type="default">SELECT dim_months.`year`, dim_months.numeric_month, SUM(price) - SUM(priceDiscount) AS sale
-FROM fact_quotes INNER JOIN dim_months ON fact_quotes.quote_month = dim_months.month_id
+      <query type="default">SELECT `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, SUM(price) - SUM(priceDiscount) AS sale
+FROM `FACT_QUOTES` INNER JOIN `DIM_MONTHS` ON `FACT_QUOTES`.quote_month = `DIM_MONTHS`.month_id
 WHERE purchased = 1
-GROUP BY dim_months.`year`, dim_months.numeric_month</query>
-      <query type="mysql">SELECT dim_months.`year`, dim_months.numeric_month, SUM(price) - SUM(priceDiscount) AS sale
-FROM fact_quotes INNER JOIN dim_months ON fact_quotes.quote_month = dim_months.month_id
+GROUP BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month</query>
+      <query type="mysql">SELECT `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, SUM(price) - SUM(priceDiscount) AS sale
+FROM `FACT_QUOTES` INNER JOIN `DIM_MONTHS` ON `FACT_QUOTES`.quote_month = `DIM_MONTHS`.month_id
 WHERE purchased = 1
-AND {sql_condition, optional, dim_months.`year`, filter_year} 
-AND {sql_condition, optional, dim_months.`numeric_month`, filter_month} 
-GROUP BY dim_months.`year`, dim_months.numeric_month</query>
+AND {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_MONTHS`.`numeric_month`, filter_month}
+GROUP BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month</query>
     </sqlprovider>
     <dataproperties>
       <dataproperty id="year">
