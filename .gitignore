@@ -4,6 +4,7 @@
 *.html
 *.zip
 *.jar
+*.retry
 *~
 ~lock.*
 ~$*
