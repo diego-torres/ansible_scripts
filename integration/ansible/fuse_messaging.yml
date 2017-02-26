@@ -1,0 +1,19 @@
+- hosts: fuse_messaging
+  remote_user: root
+
+  roles:
+    - update
+    - yum-clean
+    - reboot
+    - epel
+    - guest-additions
+    - useradd
+    - mate
+    - selinux
+    - tools
+    - java
+    - maven
+    - oc
+    - openldap
+    - yum-clean
+    - jxplorer

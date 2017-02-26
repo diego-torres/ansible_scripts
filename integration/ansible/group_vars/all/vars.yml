@@ -1,0 +1,4 @@
+user: jboss
+home_dir: /home/{{user}}
+lab_home_dir: /home/{{user}}/lab
+install_script_dir: /opt/install/scripts
