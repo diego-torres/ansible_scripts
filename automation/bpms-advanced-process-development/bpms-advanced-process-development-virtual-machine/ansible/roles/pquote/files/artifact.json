@@ -1,0 +1,7 @@
+{
+  "release-id": {
+    "group-id": "com.redhat.gpte.bpms-advanced",
+    "artifact-id": "policyquote-process-kjar",
+    "version": "1.0"
+    }
+  }

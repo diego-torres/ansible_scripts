@@ -1,0 +1,5 @@
+- hosts: bpms-advanced-process-development
+  remote_user: root
+
+  roles:
+    - pquote

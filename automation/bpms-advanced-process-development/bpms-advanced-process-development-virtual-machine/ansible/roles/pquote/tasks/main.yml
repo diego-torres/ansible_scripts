@@ -1,0 +1,91 @@
+---
+  - name: Validate bpms installation
+    stat: path={{lab_home_dir}}/bpms
+    register: bpms_install
+  - shell: "{{lab_home_dir}}/install-bpms.sh"
+    become: yes
+    become_user: "{{user}}"
+    when: bpms_install.stat.exists == False
+  - name: Validate BPMS service installation
+    stat: path=/etc/init.d/bpms
+    register: bpms_service_out
+  - block:
+      - name: ensure bpms service folder exists
+        file:
+          path: /etc/bpms
+          state: directory
+          mode: 0644
+      - name: send configuration template
+        template:
+          src: jboss-eap.conf
+          dest: /etc/bpms/bpms.conf
+          mode: 0644
+      - name: send start script for service
+        template:
+          src: jboss-eap.sh
+          dest: /etc/init.d/bpms
+          mode: 0777
+      - name: register init script as bpms service
+        shell: "chkconfig --add bpms"
+      - name: start and enable new bpms service
+        service:
+          name: bpms
+          state: started
+          enabled: true
+    when: bpms_service_out.stat.exists == False
+  - name: Clone labs repository from gitHub
+    git:
+      repo: https://github.com/gpe-mw-training/advanced-process-development-labs.git
+      dest: "{{lab_home_dir}}/advanced-process-development-labs"
+    become: yes
+    become_user: "{{user}}"
+  - name: Make maven components
+    shell: "{{lab_home_dir}}/mvn/apache-maven-3.2.5/bin/mvn clean install -f {{pquote_repo}}/{{item}} -B -U -DlocalRepositoryPath={{guvnor_destination}} > {{lab_home_dir}}/mvn_{{item}}.log"
+    become: yes
+    become_user: "{{user}}"
+    with_items:
+      - policyquote-datamodel
+      - policyquote-process-kjar
+  - name: Check kie-server is running
+    uri:
+      url: http://localhost:8080/kie-server/services/rest/server
+      user: jboss
+      password: bpms
+      headers:
+        Accept: "application/json"
+    register: ks_out
+  - name: Deploy kie-server container
+    uri:
+      url: "{{container_url}}"
+      method: PUT
+      user: jboss
+      password: bpms
+      body: "{{container_body}}"
+      body_format: json
+      status_code: 200, 201, 400
+      return_content: yes
+      headers:
+        Content-Type: "application/json"
+    register: container_out
+    when: ks_out.status == 200
+  - name: Validate container deployment
+    fail:
+    when: "'STARTED' not in container_out.content"
+  - name: Log pquotes
+    debug:
+      var: pquote_requests.quote_requests
+  - name: Create Policy quote process instances
+    uri:
+      url: "{{process_url}}/instances"
+      method: POST
+      user: jboss
+      password: bpms
+      body: "{{item}}"
+      body_format: json
+      status_code: 200, 201
+      return_content: yes
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      register: pi_out
+    with_items: "{{pquote_requests.quote_requests}}"
