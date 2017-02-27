@@ -1,0 +1,124 @@
+{
+  "policyPrices": [
+    {
+      "policy": {
+        "org.acme.insurance.policyquote.Policy": {
+          "requestDate": "2017-02-27",
+          "policyType": "CAR",
+          "vehicleYear": 2017,
+          "price": 530,
+          "priceDiscount": 0,
+          "driver": "John Doe"
+        }
+      }
+    },
+    {
+      "policy": {
+        "org.acme.insurance.policyquote.Policy": {
+          "requestDate": "2017-02-27",
+          "policyType": "CAR",
+          "vehicleYear": 2017,
+          "price": 250,
+          "priceDiscount": 0,
+          "driver": "Bruce Willis"
+        }
+      }
+    },
+    {
+      "policy": {
+        "org.acme.insurance.policyquote.Policy": {
+          "requestDate": "2017-02-27",
+          "policyType": "CAR",
+          "vehicleYear": 2017,
+          "price": 720,
+          "priceDiscount": 0,
+          "driver": "Salma Hayek"
+        }
+      }
+    },
+    {
+      "policy": {
+        "org.acme.insurance.policyquote.Policy": {
+          "requestDate": "2017-02-27",
+          "policyType": "CAR",
+          "vehicleYear": 2017,
+          "price": 150,
+          "priceDiscount": 0,
+          "driver": "Scarlett Johansson"
+        }
+      }
+    },
+    {
+      "policy": {
+        "org.acme.insurance.policyquote.Policy": {
+          "requestDate": "2017-02-27",
+          "policyType": "CAR",
+          "vehicleYear": 2017,
+          "price": 430,
+          "priceDiscount": 0,
+          "driver": "Danzel Washington"
+        }
+      }
+    },
+    {
+      "policy": {
+        "org.acme.insurance.policyquote.Policy": {
+          "requestDate": "2017-02-27",
+          "policyType": "CAR",
+          "vehicleYear": 2017,
+          "price": 1500,
+          "priceDiscount": 0,
+          "driver": "Joe Rambo"
+        }
+      }
+    },
+    {
+      "policy": {
+        "org.acme.insurance.policyquote.Policy": {
+          "requestDate": "2017-02-27",
+          "policyType": "CAR",
+          "vehicleYear": 2017,
+          "price": 510,
+          "priceDiscount": 0,
+          "driver": "Rocky Balboa"
+        }
+      }
+    },
+    {
+      "policy": {
+        "org.acme.insurance.policyquote.Policy": {
+          "requestDate": "2017-02-27",
+          "policyType": "CAR",
+          "vehicleYear": 2017,
+          "price": 430,
+          "priceDiscount": 0,
+          "driver": "Brad Pitt"
+        }
+      }
+    },
+    {
+      "policy": {
+        "org.acme.insurance.policyquote.Policy": {
+          "requestDate": "2017-02-27",
+          "policyType": "CAR",
+          "vehicleYear": 2017,
+          "price": 350,
+          "priceDiscount": 0,
+          "driver": "Angelina Jolie"
+        }
+      }
+    },
+    {
+      "policy": {
+        "org.acme.insurance.policyquote.Policy": {
+          "requestDate": "2017-02-27",
+          "policyType": "CAR",
+          "vehicleYear": 2017,
+          "price": 230,
+          "priceDiscount": 0,
+          "driver": "Megan Fox"
+        }
+      }
+    }
+  ]
+}
