@@ -1,0 +1,7 @@
+mvn_install_dir: "{{lab_home_dir}}/mvn"
+mvn_install_script_dir: mvn
+mvn_resources_dir: resources
+mvn_configuration_dir: configuration
+mvn_distro: apache-maven-3.2.5-bin.zip
+mvn_root: apache-maven-3.2.5
+mvn_marker_file: "{{mvn_install_dir}}/{{mvn_root}}/bin/mvn"

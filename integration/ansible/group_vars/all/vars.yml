@@ -1,0 +1,7 @@
+user: jboss
+home_dir: /home/{{user}}
+lab_home_dir: /home/{{user}}/lab
+install_script_dir: /opt/install/scripts
+download_dir: /opt/download
+
+amq_base_name: A-MQ7-7.0.0.ER15-1-redhat-1

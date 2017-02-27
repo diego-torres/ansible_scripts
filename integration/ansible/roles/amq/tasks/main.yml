@@ -1,0 +1,13 @@
+---
+
+- name: Create installation target directory
+  file:
+    path: "{{download_dir}}"
+    state: directory 
+    owner: "{{user}}" 
+    group: "{{user}}"
+
+- name: Copy AMQ distro
+  copy: 
+    src: "{{amq_base_name}}-bin.zip"
+    dest: "{{download_dir}}/"

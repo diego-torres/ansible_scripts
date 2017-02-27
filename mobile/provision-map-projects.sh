@@ -24,10 +24,11 @@ declare -A COURSES
 COURSES=( ["MAP_FOUNDATIONAL"]=1 )
 
 
-DEBUG=false
+DEBUG=true
 ADD=false
 REMOVE=false
 COURSE_EXIST=false
+
 OPTS=`getopt -o ar -l user:,course:,email: -n 'parse-options' -- "$@"`
 if [ $? != 0 ];
 then
@@ -76,6 +77,25 @@ determine_project_name() {
     PROJECTNAME=$(echo $username_short-$COURSENAME | cut -c -63 | sed s/_/-/g | awk '{print tolower($0)}')
 }
 
+sendEmailToStudent() {
+
+    echo -en "DEBUG: Sending email to student: $USER_EMAIL\n" >> $LOG_FILE;
+
+    # determine if student should user their username or email address for logging in
+
+    EMESSAGE="Hi,\n\n\
+You already have an account on the Red Hat Mobile Platform training server (GPTE).\n\n\
+You can log in with your existing account:\n\n\
+- Login URL: http://gpte.us.training.redhatmobile.com\n\
+- User ID: $DESIRED_LOGIN\n\n\
+If you forgot your password, use the 'Forgot Password' link.\n"
+
+    echo -en "$EMESSAGE\n" >> $LOG_FILE
+
+    echo -en $EMESSAGE | mail -s "Login for Red Hat Mobile Application Platform training server - GPTE" -r no-reply@opentlc.com $USER_EMAIL
+
+    echo -en "DEBUG: Successfully sent email to student: $USER_EMAIL\n" >> $LOG_FILE;
+}
 
 createMAPProject() {
     map_guid="";
@@ -88,14 +108,18 @@ createMAPProject() {
 
     # 2)  Determine whether user already exists in MAP Core environment
     echo "$USERNAME : Creating MAP user with email: $USER_EMAIL" >> $LOG_FILE
-    eval queryResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "username":"'$USERNAME'" }' https://$MAP_DOMAIN/box/srv/1.1/admin/user/read`
+    eval queryResponseWithUserName=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "username":"'$USERNAME'" }' https://$MAP_DOMAIN/box/srv/1.1/admin/user/read`
 
-    if [[ $DEBUG == true ]]; then echo -en "$USERNAME : DEBUG queryResponse = $queryResponse\n" >> $LOG_FILE;  fi
+    eval queryResponseWithEmail=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{ "username":"'$USER_EMAIL'" }' https://$MAP_DOMAIN/box/srv/1.1/admin/user/read`
+    
+    if [[ $DEBUG == true ]]; then 
+	echo -en "$USERNAME : DEBUG queryResponseWithUserName = $queryResponseWithUserName\n" >> $LOG_FILE;  
+	echo -en "$USER_EMAIL : DEBUG queryResponseWithEmail = $queryResponseWithEmail\n" >> $LOG_FILE;  
+    fi
+ 
+    if [[ $queryResponseWithUserName == *"User not found"* ]]  && [[ $queryResponseWithEmail == *"User not found"* ]]; then
 
-    if [[ $queryResponse == *"User not found"* ]]; then
-
-
-        echo "$USERNAME : User does not exist in MAP Core.  Will now create with email = $USER_EMAIL" >> $LOG_FILE
+        echo "$USERNAME and $USER_EMAIL: User does not exist in MAP Core.  Will now create with email = $USER_EMAIL" >> $LOG_FILE
 
         # 3)  User does not exist in MAP Core.  Create user given name and email
         eval postResponse=`curl -X POST -H "X-FH-AUTH-USER: 152ea76d89b0b60fecc1303d810cb9e6bc3bd7b2" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d'{ "username":"'$USERNAME'", "email":"'$USER_EMAIL'", "name":"'$USERNAME'", "invite":true}' \
@@ -129,10 +153,25 @@ createMAPProject() {
         fi
 
 
-    elif [[ $queryResponse = *"status:ok"* ]]; then
+    elif [[ $queryResponseWithUserName = *"status:ok"* ]] || [[ $queryResponseWithEmail = *"status:ok"* ]]; then
         echo -en "$USERNAME : MAP user already found; Completing\n" >> $LOG_FILE
+
+        # determine if student should user their username or email address for logging in
+
+        if [[ $queryResponseWithUserName = *"status:ok"* ]]; then
+         DESIRED_LOGIN=$USERNAME;
+        else
+         DESIRED_LOGIN=$USER_EMAIL
+        fi
+
+    
+        # send email to the student with login instructions
+        #
+	sendEmailToStudent;
+
     else 
-        echo -en "$USERNAME : ERROR querying for user = $queryResponse\n" >> $LOG_FILE;
+        echo -en "$USERNAME : ERROR querying for user = $queryResponseWithUserName\n" >> $LOG_FILE;
+        echo -en "$USER_EMAIL : ERROR querying for user = $queryResponseWithEmail\n" >> $LOG_FILE;
         exit 1;
     fi
 
