@@ -58,7 +58,7 @@
     become: yes
     become_user: "{{user}}"
   - name: Make maven components
-    shell: "{{lab_home_dir}}/mvn/apache-maven-3.2.5/bin/mvn clean install -f {{pquote_repo}}/{{item}} -B > {{lab_home_dir}}/mvn_{{item}}.log"
+    shell: "mvn clean install -f {{pquote_repo}}/{{item}} -B > {{lab_home_dir}}/mvn_{{item}}.log"
     become: yes
     become_user: "{{user}}"
     with_items:

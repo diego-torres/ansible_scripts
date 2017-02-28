@@ -13,6 +13,8 @@
   mysql_db:
     name: "{{ pquote_reporting_mysql_db_name}}"
     state: present
+  become: yes
+  become_user: "{{user}}"
 - mysql_user:
     name: "{{pquote_reporting_mysql_user}}"
     password: "{{pquote_reporting_mysql_password}}"
@@ -30,3 +32,5 @@
     name: "{{ pquote_reporting_mysql_db_name }}"
     state: import
     target: "{{install_script_dir}}/{{mysqlddl_install_script_dir}}/sql/pquote-reporting.sql"
+  async: 1000
+  poll: 0
