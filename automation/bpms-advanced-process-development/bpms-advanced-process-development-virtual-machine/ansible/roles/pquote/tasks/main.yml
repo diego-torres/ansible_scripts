@@ -58,7 +58,9 @@
     become: yes
     become_user: "{{user}}"
   - name: Make maven components
-    shell: "mvn clean install -f {{pquote_repo}}/{{item}} -B > {{lab_home_dir}}/mvn_{{item}}.log"
+    shell: "/home/jboss/lab/mvn/{{mvn_root}}/bin/mvn clean install -f {{pquote_repo}}/{{item}} -B > {{lab_home_dir}}/mvn_{{item}}.log"
+    args:
+      chdir: "{{lab_home_dir}}/advanced-process-development-labs"
     become: yes
     become_user: "{{user}}"
     with_items:
