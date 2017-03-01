@@ -253,7 +253,7 @@ echo "Configure persistence Dashboard app"
 sed -i s/java:jboss\\/datasources\\/ExampleDS/java:jboss\\/datasources\\/dashbuilderDS/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/jboss-web.xml
 
 # Edit the following dashbuilder file that defines various out-of-the-box BPM related KPIs
-sed -i s/local/java:jboss\\/datasources\\/jbpmDS/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/jbpmKPIs_v2.kpis
+sed -i s/local/jbpmDS/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/jbpmKPIs_v2.kpis
 
 # Set system properties
 # Server settings
@@ -359,9 +359,10 @@ echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.quartz.properties=${BPMS_HOME}/${BPMS_ROOT}/
 echo "Configure pquote dashboard"
 if [ "$DASHBOARD" = "true" ];
 then
-  cp -f $SCRIPT_DIR/export.workspace $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/export.workspace
-  cp -f $SCRIPT_DIR/kpiExport.kpis $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/kpiExport.kpis
-  cp -f $SCRIPT_DIR/pquote-datasource.datasource $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/pquote-datasource.datasource
+  cp -f $SCRIPT_DIR/pquote.workspace $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/pquote.workspace
+  cp -f $SCRIPT_DIR/pquote.kpis $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/pquote.kpis
+  cp -f $SCRIPT_DIR/pquote.datasource $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/pquote.datasource
+  cp -f $SCRIPT_DIR/jbpm.datasource $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/jbpm.datasource
 fi
 
 exit 0

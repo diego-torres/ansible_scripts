@@ -1,0 +1,4 @@
+type=JNDI
+name=jbpmDS
+testQuery=SELECT count(instanceid) FROM `processinstanceinfo`
+jndiPath=java:jboss/datasources/jbpmDS
