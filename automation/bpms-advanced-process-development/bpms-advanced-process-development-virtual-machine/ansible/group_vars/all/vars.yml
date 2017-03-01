@@ -15,3 +15,4 @@ pquote_reporting_mysql_db_name: pquote_reporting
 pquote_reporting_mysql_user: pquote
 pquote_reporting_mysql_password: jboss
 
+mvn_root: apache-maven-3.2.5
