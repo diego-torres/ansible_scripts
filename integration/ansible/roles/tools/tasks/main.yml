@@ -1,4 +1,4 @@
 ---
 
 - name: Install tools
-  yum: name=git,zip,bzip2,unzip,gettext,wget,curl,telnet state=present
+  yum: name=git,zip,bzip2,unzip,gettext,wget,curl,telnet,tree state=present
