@@ -1,13 +1,14 @@
 ---
 
-- name: Create installation target directory
-  file:
-    path: "{{download_dir}}"
-    state: directory 
+- name: unzip AMQ distro to {{amq_install_dir}}
+  unarchive:
+    src: "{{amq_base_name}}-bin.zip"
+    dest: "/opt/install"
     owner: "{{user}}" 
     group: "{{user}}"
 
-- name: Copy AMQ distro
-  copy: 
-    src: "{{amq_base_name}}-bin.zip"
-    dest: "{{download_dir}}/"
+- name: create soft link for convenience purposes
+  file:
+    state: link
+    src: "/opt/install/{{amq_base_name}}"
+    path: "/opt/install/A-MQ7-7"
