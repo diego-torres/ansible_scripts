@@ -1,0 +1,6 @@
+pquote_repo: "{{lab_home_dir}}/advanced-process-development-labs"
+container_url: "http://localhost:8080/kie-server/services/rest/server/containers/deployments-are-secured"
+process_url: "{{container_url}}/processes/org.acme.insurance.PolicyQuoteProcess"
+container_body: "{{ lookup('file','artifact.json') }}"
+pquote_requests: "{{ lookup('file','policyQuotes.json') }}"
+price_task_values: "{{ lookup('file', 'setPriceTask.json') }}"

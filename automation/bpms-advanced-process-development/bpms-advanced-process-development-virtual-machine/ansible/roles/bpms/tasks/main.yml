@@ -24,9 +24,10 @@
     - install/scripts/mysql-quartz-datasource-config.xml
     - install/scripts/quartz.properties
     - install/scripts/standalone.xml
-    - install/scripts/export.workspace
-    - install/scripts/kpiExport.kpis
-    - install/scripts/pquote-datasource.datasource
+    - install/scripts/pquote.workspace
+    - install/scripts/pquote.kpis
+    - install/scripts/pquote.datasource
+    - install/scripts/jbpm.datasource
 
 - name: Create installation resources directory
   file: path={{install_script_dir}}/{{bpms_install_script_dir}}/{{bpms_resources_dir}} state=directory mode=0755
