@@ -9,7 +9,8 @@
 +
 Ansible will then customize this virtual machine.
 
-* OS : CentOS 7 x68_64
+* OS : RHEL 7 x68_64
+** RHEL is needed (instead of CENTOS) because latest supported `qpid-dispatch` libraries only come from supported RHEL channels
 * Disk: 20GB, dynamically allocated, VDI format
 * Memory : 4GB
 * Base images installation:
@@ -28,6 +29,15 @@ Ansible will then customize this virtual machine.
 +
 `qcow2` can then be transformed to VDI if/when need be.
 
+
+== RHEL 7 Pre-reqs
+
+. Ensure the target RHEL OS has already been registered with Red Hat Network
+. Execute the following from your local environment:
++
+-----
+sudo ansible-galaxy install geerlingguy.repo-epe
+-----
 
 == Inventory file
 Copy the `hosts.example` file to `hosts`, and replace `<ip address of virtual machine>` with the IP address of the virtual machine.

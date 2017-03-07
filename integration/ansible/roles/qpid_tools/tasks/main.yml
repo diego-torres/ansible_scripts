@@ -1,0 +1,7 @@
+---
+
+- name: Enable interconnect channels
+  shell: "subscription-manager repos --enable={{qpid_interconnect_channel}} --enable={{qpid_client_channel}}"
+
+- name: pull interconnect packages
+  yum: name=qpid-dispatch-router,qpid-dispatch-tools,qpid-dispatch-docs,python-qpid-proton-docs state=present
