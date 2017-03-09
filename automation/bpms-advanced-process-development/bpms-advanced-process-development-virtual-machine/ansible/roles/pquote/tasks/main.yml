@@ -118,6 +118,11 @@
       headers:
         Accept: "application/json"
     with_sequence: count=10
+    
+# Invoke KIE-Server API to set the price on all human tasks that have been previously creatd to this point
+# Uses both components of an ansible "item" collection
+#   0  :   is the index of the ansible item
+#   1  :   is the actual json object from the collection
   - name: Set price task values
     uri:
       url: "{{container_url}}/tasks/{{ item.0 + 1 }}/contents/output"
@@ -131,6 +136,7 @@
         Accept: "application/json"
         Content-Type: "application/json"
     with_indexed_items: "{{ price_task_values.policyPrices }}"
+    
   - name: complete tasks
     uri:
       url: "{{container_url}}/tasks/{{ item.0 + 1 }}/states/completed"
