@@ -1,0 +1,38 @@
+---
+  - name: Validate bpms installation
+    stat: path={{lab_home_dir}}/bpms
+    register: bpms_install
+  - shell: "{{lab_home_dir}}/install-bpms.sh"
+    become: yes
+    become_user: "{{user}}"
+    when: bpms_install.stat.exists == False
+  - shell: "{{lab_home_dir}}/reset.sh"
+    become: yes
+    become_user: "{{user}}"
+  - name: Validate BPMS service installation
+    stat: path=/etc/init.d/bpms
+    register: bpms_service_out
+  - block:
+      - name: ensure bpms service folder exists
+        file:
+          path: /etc/bpms
+          state: directory
+          mode: 0644
+      - name: send configuration template
+        template:
+          src: jboss-eap.conf
+          dest: /etc/bpms/bpms.conf
+          mode: 0644
+      - name: send start script for service
+        template:
+          src: jboss-eap.sh
+          dest: /etc/init.d/bpms
+          mode: 0777
+      - name: register init script as bpms service
+        shell: "chkconfig --add bpms"
+    when: bpms_service_out.stat.exists == False
+  - name: start and enable new bpms service
+    service:
+      name: bpms
+      state: started
+      enabled: true
