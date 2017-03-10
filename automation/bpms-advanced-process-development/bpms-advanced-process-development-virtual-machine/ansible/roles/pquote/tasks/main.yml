@@ -22,6 +22,11 @@
       dest: "{{lab_home_dir}}/bpms/standalone/configuration/application-roles.properties"
       regexp: '^user1=(.*)'
       line: 'user1=kie-server,rest-task,rest-query,agent'
+  - name: Enable svg extension
+    lineinfile:
+      dest: "{{lab_home_dir}}/bpms/standalone/deployments/business-central.war/org.kie.workbench.KIEWebapp/profiles/jbpm.xml"
+      regexp: '<storesvgonsave enabled="(.*)"\/>'
+      line: "<storesvgonsave enabled=\"true\" />"
   - name: start and enable new bpms service
     service:
       name: bpms
@@ -34,13 +39,6 @@
       force: yes
     become: yes
     become_user: "{{user}}"
-  - name: Include policyquote-process-kjar process image
-    copy:
-      src: "org.acme.insurance.PolicyQuoteProcess-svg.svg"
-      dest: "{{lab_home_dir}}/advanced-process-development-labs/policyquote-process-kjar/src/main/resources/org/acme/insurance/org.acme.insurance.PolicyQuoteProcess-svg.svg"
-      owner: "{{user}}"
-      group: "{{user}}"
-      mode: 0644
   - name: Make maven components
     shell: "{{lab_home_dir}}/mvn/{{mvn_root}}/bin/mvn clean install -f {{pquote_repo}}/{{item}} -B > {{lab_home_dir}}/mvn_{{item}}.log"
     args:
@@ -49,90 +47,3 @@
     become_user: "{{user}}"
     with_items:
       - policyquote-datamodel
-      - policyquote-process-kjar
-  - name: Check kie-server is running
-    uri:
-      url: http://localhost:8080/kie-server/services/rest/server
-      user: jboss
-      password: bpms
-      headers:
-        Accept: "application/json"
-    register: ks_out
-    until: ks_out.status == 200
-    retries: 3
-    delay: 60
-  - name: Deploy kie-server container
-    uri:
-      url: "{{container_url}}"
-      method: PUT
-      user: jboss
-      password: bpms
-      body: "{{container_body}}"
-      body_format: json
-      status_code: 200, 201, 400
-      return_content: yes
-      headers:
-        Content-Type: "application/json"
-    register: container_out
-    when: ks_out.status == 200
-  - name: Validate container deployment
-    fail:
-    when: "'STARTED' not in container_out.content"
-  - name: Create Policy quote process instances
-    uri:
-      url: "{{process_url}}/instances"
-      method: POST
-      user: jboss
-      password: bpms
-      body: "{{item}}"
-      body_format: json
-      status_code: 200, 201
-      headers:
-        Content-Type: "application/json"
-        Accept: "application/json"
-    with_items: "{{pquote_requests.quote_requests}}"
-    when: container_out.status == 201
-  - name: Starting tasks
-    uri:
-      url: "{{container_url}}/tasks/{{ item }}/states/started"
-      method: PUT
-      user: jboss
-      password: bpms
-      status_code: 200, 201
-      headers:
-        Accept: "application/json"
-    with_sequence: count=10
-    
-# NOTE:  this *may* be unnecessary.  Its the body in the call to complete the task that is required.
-  - name: Set price task values
-    uri:
-      url: "{{container_url}}/tasks/{{ item.0 + 1 }}/contents/output"
-      method: PUT
-      user: jboss
-      password: bpms
-      status_code: 200, 201
-      body: "{{ item.1 }}"
-      body_format: json
-      headers:
-        Accept: "application/json"
-        Content-Type: "application/json"
-    with_indexed_items: "{{ price_task_values.policyPrices }}"
-    
-    
-# Invoke KIE-Server API to set the price and complete all human tasks that have been previously creatd to this point
-# Uses both components of an ansible "item" collection
-#   0  :   is the index of the ansible item
-#   1  :   is the actual json object from the collection
-  - name: complete tasks
-    uri:
-      url: "{{container_url}}/tasks/{{ item.0 + 1 }}/states/completed"
-      method: PUT
-      user: jboss
-      password: bpms
-      status_code: 200, 201
-      body: "{{ item.1 }}"
-      body_format: json
-      headers:
-        Accept: "application/json"
-        Content-Type: "application/json"
-    with_indexed_items: "{{ price_task_values.policyPrices }}"
