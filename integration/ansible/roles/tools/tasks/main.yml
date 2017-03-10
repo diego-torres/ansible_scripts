@@ -1,0 +1,14 @@
+---
+
+- name: Install tools
+  yum: name=git,zip,bzip2,unzip,gettext,wget,curl,telnet,tree state=present
+
+# libaio package comes included in a minimal install of CENTOS
+# It is a dependency of the following package : device-mapper-persistent-data
+# device-mapper-persistent-data  is not needed for the purpose of fuse courses
+#
+# We want to intentionally remove libaio so that students of fuse_messaging_7 intially observe behavior of their broker when it is not installed.
+# Afterwards, they will be instructed to manually install
+- name: Delete libaio
+  yum: name=libaio state=removed
+

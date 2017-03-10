@@ -1,0 +1,19 @@
+---
+
+- name: Create installation target directory
+  file: path={{oc_install_dir}} state=directory owner={{user}} group={{user}}
+
+- name: Copy oc binary
+  copy: src={{oc_distro}} dest={{oc_install_dir}} owner={{user}} group={{user}}
+
+- name: Set file permissions
+  file: 
+    path={{oc_install_dir}}/{{item}}
+    mode=0775
+  with_items:
+    - oc
+
+- name: add OC to PATH
+  lineinfile: dest={{home_dir}}/.bashrc line='export PATH={{oc_install_dir}}:$PATH' insertafter='EOF' state=present
+  become: yes
+  become_user: "{{user}}"

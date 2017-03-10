@@ -1,0 +1,2 @@
+oc_install_dir: "{{lab_home_dir}}/oc"
+oc_distro: oc
