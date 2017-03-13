@@ -23,7 +23,7 @@
 
 - name: Configure firewalld to allow for remote access to websockify proxy (to enable dispatch-router plugin of hawtio)
   firewalld:
-    port: 2009/tcp
+    port: 5673/tcp
     permanent: true
     state: enabled
 
