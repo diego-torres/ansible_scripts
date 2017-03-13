@@ -12,3 +12,6 @@
 - name: Delete libaio
   yum: name=libaio state=removed
 
+# https://github.com/apache/qpid-dispatch/blob/master/doc/book/console_installation.adoc
+- name: Install python-websockify  
+  yum: name=python-websockify state=present
