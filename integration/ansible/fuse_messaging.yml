@@ -5,9 +5,10 @@
     - update
     - qpid_tools
     - tools
+    - docker
 
 #   - epel                      # centos only
-    - geerlingguy.repo-epel     # rhel; need to execute beforehand:  sudo ansible-galaxy install geerlingguy.repo-epel
+    - geerlingguy.repo-epel     # rhel; need to execute the following beforehand:  sudo ansible-galaxy install geerlingguy.repo-epel
 
     - yum-clean
     - reboot
@@ -19,7 +20,5 @@
     - java
     - maven
     - oc
-    - openldap
     - yum-clean
-    - jxplorer
     - amq

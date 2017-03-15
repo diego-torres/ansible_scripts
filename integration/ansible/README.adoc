@@ -11,6 +11,14 @@ Ansible will then customize this virtual machine.
 
 * OS : RHEL 7 x68_64
 ** RHEL is needed (instead of CENTOS) because latest supported `qpid-dispatch` libraries only come from supported RHEL channels
++
+Ensure the following channels are enabled
+
+*** rhel-7-server-rpms
+*** rhel-7-server-extras-rpm
+*** rhel-7-server-supplementary-rpm
+*** a-mq-interconnect-1-for-rhel-7-server-beta-rpms
+
 * Disk: 20GB, dynamically allocated, VDI format
 * Memory : 4GB
 * Base images installation:

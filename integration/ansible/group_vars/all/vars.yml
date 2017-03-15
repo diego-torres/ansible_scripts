@@ -4,6 +4,8 @@ lab_home_dir: /home/{{user}}/lab
 install_script_dir: /opt/install/scripts
 download_dir: /opt/download
 
+extras_channel: rhel-7-server-extras-rpms
+supplementary_channel: rhel-7-server-supplementary-rpms
 qpid_interconnect_channel: a-mq-interconnect-1-for-rhel-7-server-beta-rpms
 qpid_client_channel: a-mq-clients-1-for-rhel-7-server-beta-rpms
 
