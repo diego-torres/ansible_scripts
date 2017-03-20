@@ -1,0 +1,26 @@
+---
+
+- name: Create {{amq_repo_dir}} target directory
+  file: path={{amq_repo_dir}} state=directory owner={{user}} group={{user}}
+
+- name: copy and unzip {{ jboss_amq7_maven_repo_distro }}
+  stat:
+    path: "{{amq_repo_dir}}/amq"
+  register: st
+- unarchive: 
+    src: "{{jboss_amq7_maven_repo_distro}}" 
+    dest: "{{amq_repo_dir}}" 
+    owner: "{{user}}" 
+    group: "{{user}}"
+  when: st.stat.isdir is not defined
+
+- name: copy and unzip {{ jboss_amq_qpid_repo_distro }} maven repo
+  stat:
+    path: "{{amq_repo_dir}}/amq"
+  register: st
+- unarchive: 
+    src: "{{jboss_amq_qpid_repo_distro}}" 
+    dest: "{{amq_repo_dir}}" 
+    owner: "{{user}}" 
+    group: "{{user}}"
+  when: st.stat.isdir is not defined

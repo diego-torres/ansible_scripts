@@ -19,6 +19,7 @@
     - firewalld
     - java
     - maven
+    - amq-repos
     - oc
     - yum-clean
     - amq

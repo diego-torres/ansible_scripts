@@ -50,6 +50,12 @@ sudo ansible-galaxy install geerlingguy.repo-epe
 == Inventory file
 Copy the `hosts.example` file to `hosts`, and replace `<ip address of virtual machine>` with the IP address of the virtual machine.
 
+== Installation Artifacts
+
+. `amq-repos/files`:
+.. jboss-amq7-7.0.0.ER15-1-maven-repository.zip
+.. jboss-amq-qpid-jms-0.20.0.redhat-2-maven-repository.zip
+
 == Provisioning
 In this directory, execute the following command:
 
