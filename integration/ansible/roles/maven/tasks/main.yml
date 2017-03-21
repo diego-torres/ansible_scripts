@@ -32,7 +32,7 @@
 - name: Copy Maven distro
   copy: src={{mvn_distro}} dest={{install_script_dir}}/{{mvn_install_script_dir}}/{{mvn_resources_dir}}/{{mvn_distro}}
 
-- name: Install Maven
+- name: Execute {{install_script_dir}}/mvn/install-mvn.sh
   shell: 
     '{{install_script_dir}}/mvn/install-mvn.sh creates={{mvn_marker_file}}'
   become: yes
