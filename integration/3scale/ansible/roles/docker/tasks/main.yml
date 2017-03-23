@@ -1,0 +1,10 @@
+---
+
+- name: Install docker
+  yum: 
+    name: docker,device-mapper-libs,device-mapper-event-libs
+    state: present
+
+- name: bounce firewalld
+  command: systemctl enable docker.service
+  command: systemctl restart docker.service

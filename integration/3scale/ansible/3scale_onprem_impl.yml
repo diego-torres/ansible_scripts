@@ -1,0 +1,23 @@
+- hosts:3scale_impl 
+  remote_user: root
+
+  roles:
+    - update
+    - tools
+    - docker
+
+#   - epel                      # centos only
+    - geerlingguy.repo-epel     # rhel; need to execute the following beforehand:  sudo ansible-galaxy install geerlingguy.repo-epel
+
+    - reboot
+    - useradd
+    - selinux
+    - firewalld
+    - java
+    - maven
+    - oc
+    - yum-clean
+    - ssl-ca 
+    - rhsso
+    - rhsso-adapter
+    - rhsso-import
