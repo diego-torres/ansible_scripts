@@ -1,2 +1,2 @@
-oc_install_dir: "{{lab_home_dir}}/oc"
+oc_install_dir: "/usr/bin"
 oc_distro: oc

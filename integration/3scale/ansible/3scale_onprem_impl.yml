@@ -1,7 +1,13 @@
 - hosts: 3scale_impl 
   remote_user: root
+  vars_prompt:
+    - name: is_ravello
+      prompt: "Is this a VM that will be managed by GPTE CloudForms (y/n)? "
+      default: "y"
+      private: no
 
   roles:
+    - hostname
     - update
     - tools
     - docker
@@ -16,6 +22,7 @@
     - java
     - maven
     - oc
+    - oc-cluster-wrapper
     - yum-clean
     - ssl-ca 
     - rhsso

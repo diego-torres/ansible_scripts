@@ -5,6 +5,13 @@
     name: docker,device-mapper-libs,device-mapper-event-libs
     state: present
 
-- name: bounce firewalld
+- name: add insecure registry settings for docker
+  lineinfile:
+    dest: /etc/sysconfig/docker
+    line: INSECURE_REGISTRY='--insecure-registry 172.30.0.0/16 --insecure-registry registry.access.redhat.com'
+    insertafter: '# INSECURE_REGISTRY'
+    state: present
+
+- name: bounce docker service
   command: systemctl enable docker.service
   command: systemctl restart docker.service

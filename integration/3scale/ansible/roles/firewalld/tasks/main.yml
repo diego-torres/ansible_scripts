@@ -9,21 +9,9 @@
   command: systemctl enable firewalld.service
   command: systemctl restart firewalld.service
 
-- name: Configure firewalld to allow for remote access to AMQ Management Console 
+- name: Configure firewalld to allow for remote access to OCP Master web interface 
   firewalld:
-    port: 8161/tcp
-    permanent: true
-    state: enabled
-
-- name: Configure firewalld to allow for remote access to AMQ multi-plexed port
-  firewalld:
-    port: 61616/tcp
-    permanent: true
-    state: enabled
-
-- name: Configure firewalld to allow for remote access to websockify proxy (to enable dispatch-router plugin of hawtio)
-  firewalld:
-    port: 5673/tcp
+    port: 8443/tcp
     permanent: true
     state: enabled
 
