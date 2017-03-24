@@ -5,6 +5,7 @@
 *.zip
 *.jar
 *.swp
+oc
 *~
 ~lock.*
 ~$*

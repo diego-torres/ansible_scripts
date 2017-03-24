@@ -1,4 +1,4 @@
-- hosts:3scale_impl 
+- hosts: 3scale_impl 
   remote_user: root
 
   roles:

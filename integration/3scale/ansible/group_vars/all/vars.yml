@@ -1,0 +1,9 @@
+user: jboss
+home_dir: /home/{{user}}
+lab_home_dir: /home/{{user}}/lab
+install_script_dir: /opt/install/scripts
+download_dir: /opt/download
+
+extras_channel: rhel-7-server-extras-rpms
+supplementary_channel: rhel-7-server-supplementary-rpms
+optional_channel: rhel-7-server-optional-rpms
