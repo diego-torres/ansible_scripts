@@ -5,3 +5,6 @@
 
 - name: Install tools (ensure that Extras repo is enabled since it containers docker).
   yum: name=git,zip,bzip2,unzip,gettext,wget,curl,telnet,tree state=present
+
+- name: Ensure that several packages are explicitly not installed
+  yum: name=httpd,libvirtd state=absent

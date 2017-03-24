@@ -18,3 +18,4 @@ not4git/
 .classpath
 *.settings/
 docker.pid
+*test.yml

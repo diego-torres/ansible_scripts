@@ -14,6 +14,10 @@
     port: 8443/tcp
     permanent: true
     state: enabled
+- firewalld:
+    port: 443/tcp
+    permanent: true
+    state: enabled
 
 - name: bounce firewalld
   command: systemctl restart firewalld.service

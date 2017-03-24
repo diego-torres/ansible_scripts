@@ -5,4 +5,3 @@ roles/oc/files/oc
 roles/maven-repo/files/
 hosts
 *.tmp
-*test.yml
