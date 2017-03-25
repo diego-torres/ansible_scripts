@@ -10,3 +10,10 @@
     owner: "{{user}}"
     group: "{{user}}"
 
+- name: Create docker group
+  group:
+    name: docker
+    state: present
+
+- name: Create {{user}} operating system user with ability to control docker
+  user: name={{user}} groups=wheel,docker password={{password}}
