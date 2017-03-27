@@ -5,6 +5,6 @@
     name: docker,device-mapper-libs,device-mapper-event-libs
     state: present
 
-- name: bounce firewalld
+- name: bounce docker
   command: systemctl enable docker.service
   command: systemctl restart docker.service

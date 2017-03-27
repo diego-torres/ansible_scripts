@@ -5,9 +5,9 @@
     name: firewalld 
     state: present
 
-- name: bounce firewalld
+- name: enable and start firewalld
   command: systemctl enable firewalld.service
-  command: systemctl restart firewalld.service
+  command: systemctl start firewalld.service
 
 - name: Configure firewalld to allow for remote access to AMQ Management Console 
   firewalld:

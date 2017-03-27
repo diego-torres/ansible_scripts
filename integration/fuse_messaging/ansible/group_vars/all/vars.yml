@@ -5,6 +5,7 @@ lab_home_dir: /home/{{user}}/lab
 install_script_dir: /opt/install/scripts
 download_dir: /opt/download
 
+rhel_channel: rhel-7-server-rpms
 extras_channel: rhel-7-server-extras-rpms
 supplementary_channel: rhel-7-server-supplementary-rpms
 optional_channel: rhel-7-server-optional-rpms

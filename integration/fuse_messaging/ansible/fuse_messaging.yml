@@ -9,13 +9,13 @@
   roles:
     - hostname
     - update
-    - qpid_tools
     - tools
     - docker
 
 #   - epel                      # centos only
     - geerlingguy.repo-epel     # rhel; need to execute the following beforehand:  sudo ansible-galaxy install geerlingguy.repo-epel
 
+    - qpid_tools
     - yum-clean
     - reboot
     - guest-additions
