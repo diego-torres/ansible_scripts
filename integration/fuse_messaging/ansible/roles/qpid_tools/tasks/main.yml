@@ -10,3 +10,7 @@
 #    python-qpid-proton-docs.noarch             0.17.0-1.el7                                epel 
 - name: pull interconnect packages
   yum: name=qpid-dispatch-router,qpid-dispatch-tools,qpid-dispatch-docs,python-qpid-proton-doc state=present
+
+# https://github.com/apache/qpid-dispatch/blob/master/doc/book/console_installation.adoc
+- name: Install python-websockify  
+  yum: name=python-websockify state=present
