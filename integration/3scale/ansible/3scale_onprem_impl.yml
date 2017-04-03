@@ -28,3 +28,5 @@
     - rhsso
     - rhsso-adapter
     - rhsso-import
+
+    - rhn_unsubscribe
