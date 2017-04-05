@@ -5,6 +5,10 @@
     dest: /etc/bashrc
     block: |
 
+        MAVEN_HOME={{mvn_install_dir}}/{{mvn_root}}
+        PATH=$MAVEN_HOME/bin:$PATH
+        
+
         # Git Completion: RHEL 7
         source /usr/share/git-core/contrib/completion/git-prompt.sh
         GIT_COMPLETION_PATH="/etc/bash_completion.d/git"

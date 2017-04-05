@@ -43,14 +43,6 @@ function install_mvn {
   ls $MVN_SETTINGS
   cp -f $MVN_SETTINGS $HOME_DIR/.m2/settings.xml
   
-  RET=`cat $HOME_DIR/.bashrc | grep "M2_HOME=" | grep -v "#"`
-  if [[ "$RET" == "" ]]
-    then
-      echo $'\n' >> $HOME_DIR/.bashrc
-      echo "export M2_HOME=$MVN_INSTALL_DIR/$MVN_ROOT_DIR" >> $HOME_DIR/.bashrc
-      echo "export PATH=\$M2_HOME/bin:\$PATH" >> $HOME_DIR/.bashrc
-  fi
-
 }
 
 check_prerequisites

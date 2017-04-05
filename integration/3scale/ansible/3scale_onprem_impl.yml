@@ -29,4 +29,6 @@
     - rhsso-adapter
     - rhsso-import
 
+    - onprem-labs
+
     - rhn_unsubscribe

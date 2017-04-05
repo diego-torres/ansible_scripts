@@ -8,3 +8,8 @@ hostname: rhtapimgmt
 extras_channel: rhel-7-server-extras-rpms
 supplementary_channel: rhel-7-server-supplementary-rpms
 optional_channel: rhel-7-server-optional-rpms
+
+mvn_install_dir: "/opt/mvn"
+mvn_root: apache-maven-3.2.5
+
+onprem_labs: 3scale_onpremise_implementation_labs

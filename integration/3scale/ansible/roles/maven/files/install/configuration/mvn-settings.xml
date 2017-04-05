@@ -2,34 +2,6 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
     <profiles>
-        <!-- Configure the AMQ7 Maven repository -->
-        <profile>
-            <id>amq7-repository</id>
-            <repositories>
-                <repository>
-                    <id>amq7-repository</id>
-                    <url>file:///opt/repos/amq/amq7-7.0.0.ER15-1-maven-repository/maven-repository</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>amq7-repository</id>
-                    <url>file:///opt/repos/amq/amq7-7.0.0.ER15-1-maven-repository/maven-repository</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
         <!-- Configure the JBoss GA Maven repository -->
         <profile>
             <id>jboss-ga-repository</id>
@@ -88,8 +60,6 @@
         </profile>
     </profiles>
     <activeProfiles>
-        <!-- Optionally, make the repository active by default -->
-        <activeProfile>amq7-repository</activeProfile>
         <activeProfile>jboss-ga-repository</activeProfile>
         <activeProfile>jboss-earlyaccess-repository</activeProfile>
     </activeProfiles>
