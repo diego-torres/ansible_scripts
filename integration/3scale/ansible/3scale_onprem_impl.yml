@@ -15,6 +15,7 @@
 #   - epel                      # centos only
     - geerlingguy.repo-epel     # rhel; need to execute the following beforehand:  sudo ansible-galaxy install geerlingguy.repo-epel
 
+    - nginx
     - reboot
     - useradd
     - selinux
