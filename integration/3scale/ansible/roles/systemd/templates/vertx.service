@@ -4,7 +4,7 @@ Documentation=
 After=network.target
 
 [Service]
-ExecStart=/bin/java -DLISTENER_PORT=9080 -jar {{vertx_service_home}}/target/vertx-raml-1.0-fat.jar
+ExecStart=/bin/java -DLISTENER_PORT=9080 -Dvertx.cacheDirBase=/tmp/ -jar {{vertx_service_home}}/target/vertx-raml-1.0-fat.jar
 StandardOutput=journal
 SyslogIdentifier=vertx_service
 User={{user}}
