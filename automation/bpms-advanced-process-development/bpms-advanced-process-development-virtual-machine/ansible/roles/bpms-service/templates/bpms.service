@@ -1,0 +1,13 @@
+[Unit]
+Description=EAP BPMS service
+Documentation=https://docs.jboss.org/author/display/WFLY8/Documentation
+After=newtwork.target
+
+[Service]
+ExecStart={{lab_home_dir}}/bpms/bin/standalone.sh
+StandardOutput=journal
+SyslogIdentifier=bpms
+User={{user}}
+
+[Install]
+WantedBy=multi-user.target
