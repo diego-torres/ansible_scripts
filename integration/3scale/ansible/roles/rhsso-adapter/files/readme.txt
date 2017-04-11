@@ -1,0 +1,1 @@
+rh-sso-7.0.0-eap6-adapter.zip

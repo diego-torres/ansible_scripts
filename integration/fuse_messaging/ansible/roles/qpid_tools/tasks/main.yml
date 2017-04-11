@@ -1,0 +1,16 @@
+---
+
+- name: Enable interconnect channels
+  shell: "subscription-manager repos --enable={{qpid_interconnect_channel}} --enable={{qpid_client_channel}}"
+
+# Appears to need EPEL as qpid-dispatch-router has dependency on qpid-proton-c (which is in epel)
+# Differences betwen python-qpid-proton-doc package in EPEL and a-mq-clients-1-for-rhel-7-server-rpms
+#    yum list python-qpid-proton-doc\*
+#    python-qpid-proton-doc.noarch              0.10-2.el7                                  a-mq-clients-1-for-rhel-7-server-rpms
+#    python-qpid-proton-docs.noarch             0.17.0-1.el7                                epel 
+- name: pull interconnect packages
+  yum: name=qpid-dispatch-router,qpid-dispatch-tools,qpid-dispatch-docs,python-qpid-proton-doc state=present
+
+# https://github.com/apache/qpid-dispatch/blob/master/doc/book/console_installation.adoc
+- name: Install python-websockify  
+  yum: name=python-websockify state=present

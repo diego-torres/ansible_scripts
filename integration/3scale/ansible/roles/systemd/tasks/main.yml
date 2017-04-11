@@ -1,0 +1,16 @@
+---
+
+# NOTE: systemd ansible module is only available in version 2.2
+#       fedora 24 only includes ansible 2.1.2
+
+- name: Create and enable systemd config for wf_swarm
+  template:
+     src: wfswarm.service
+     dest: /usr/lib/systemd/system/
+     mode: "u=rw,g=r,o=r"
+
+- name: Create and enable systemd config for vertx
+  template:
+     src: vertx.service
+     dest: /usr/lib/systemd/system/
+     mode: "u=rw,g=r,o=r"

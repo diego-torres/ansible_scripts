@@ -1,0 +1,13 @@
+[Unit]
+Description=Wildfly Swarm Service
+Documentation=
+After=network.target
+
+[Service]
+ExecStart=/bin/java -Dswarm.http.port=9180 -jar {{swarm_service_home}}/target/wf-swarm-swagger-1.0-swarm.jar
+StandardOutput=journal
+SyslogIdentifier=swarm_service
+User={{user}}
+
+[Install]
+WantedBy=multi-user.target

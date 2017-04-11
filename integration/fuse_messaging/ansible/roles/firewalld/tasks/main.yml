@@ -1,0 +1,31 @@
+---
+
+- name: Install firewalld
+  yum: 
+    name: firewalld 
+    state: present
+
+- name: enable and start firewalld
+  command: systemctl enable firewalld.service
+  command: systemctl start firewalld.service
+
+- name: Configure firewalld to allow for remote access to AMQ Management Console 
+  firewalld:
+    port: 8161/tcp
+    permanent: true
+    state: enabled
+
+- name: Configure firewalld to allow for remote access to AMQ multi-plexed port
+  firewalld:
+    port: 61616/tcp
+    permanent: true
+    state: enabled
+
+- name: Configure firewalld to allow for remote access to websockify proxy (to enable dispatch-router plugin of hawtio)
+  firewalld:
+    port: 5673/tcp
+    permanent: true
+    state: enabled
+
+- name: bounce firewalld
+  command: systemctl restart firewalld.service

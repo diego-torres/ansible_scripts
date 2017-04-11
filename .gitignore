@@ -1,10 +1,12 @@
 .vagrant/
-
+*.retry
 *.class
 *.html
 *.zip
 *.jar
+*.swp
 *.retry
+oc
 *~
 ~lock.*
 ~$*
@@ -17,3 +19,4 @@ not4git/
 .classpath
 *.settings/
 docker.pid
+*test.yml

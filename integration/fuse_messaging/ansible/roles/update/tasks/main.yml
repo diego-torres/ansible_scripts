@@ -1,0 +1,13 @@
+---
+
+# This appears to be unreliable ... frequent, non-deterministic timeouts.
+# # Better to enuse these channels are neabled in: /etv/yum.repos.di/redhat.repo
+# - name: Enable base rhel channel
+#   shell: "subscription-manager repos --enable={{rhel_channel}} "
+
+- name: Install deltarpm
+  yum: name=deltarpm state=present
+
+- name: Update all packages
+  yum: name=* state=latest
+  register: updatepackages

@@ -1,0 +1,23 @@
+---
+
+- name: Install firewalld
+  yum: 
+    name: firewalld 
+    state: present
+
+- name: bounce firewalld
+  command: systemctl enable firewalld.service
+  command: systemctl restart firewalld.service
+
+- name: Configure firewalld to allow for remote access to OCP Master web interface 
+  firewalld:
+    port: 8443/tcp
+    permanent: true
+    state: enabled
+- firewalld:
+    port: 443/tcp
+    permanent: true
+    state: enabled
+
+- name: bounce firewalld
+  command: systemctl restart firewalld.service
