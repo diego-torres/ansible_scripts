@@ -1,1 +1,1 @@
-rh-sso-7.0.0-eap6-adapter.zip
+rh-sso-7.0.0-eap7-adapter.zip

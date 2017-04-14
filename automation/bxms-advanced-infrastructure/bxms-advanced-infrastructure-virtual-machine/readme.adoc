@@ -25,12 +25,12 @@
 The following binary files must be added to the playbook, to the `files` directory of the role:
 
 * Role `bpms` :
-** `jboss-bpmssuite-6.3.0.GA-redhat-4-deployable-eap6.x.zip`
-** `jboss-eap-6.4.7-full-build.zip`
+** `jboss-bpmsuite-6.4.0.GA-deployable-eap7.x.zip`
+** `jboss-eap-7.0.0.zip`
 * Role `rhsso` :
 ** `rh-sso-7.0.0.zip`
 * Role `rhsso-adapter` :
-** `rh-sso-7.0.0-eap6-adapter.zip`
+** `rh-sso-7.0.0-eap7-adapter.zip`
 * Role `maven`
 ** `apache-maven-3.2.5-bin.zip`
 * Role `oc`
@@ -62,3 +62,7 @@ The `zerofree` tool allows to compact the virtual machine disk size by reclaimin
 The virtual machine has the `zerofree` tool in the `/usr/bin` directory.
 
 For a how-to: http://www.thelinuxdaily.com/2010/02/shrinking-a-dynamic-virtualbox-disk-image/
+
+==== zero free alternative
+
+For VMs based on XFS, an alternative to the use of _zerofree_ is:  http://www.netreliant.com/news/8/17/Compacting-VirtualBox-Disk-Images-Linux-Guests.html
