@@ -20,7 +20,7 @@ Ensure the following channels are enabled
 *** a-mq-interconnect-1-for-rhel-7-server-beta-rpms
 
 * Disk: 20GB, dynamically allocated, VDI format
-* Memory : 4GB
+* Memory : 2GB
 * Base images installation:
 ** Hostname: bpms
 ** Network: on
