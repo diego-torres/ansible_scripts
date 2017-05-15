@@ -38,13 +38,13 @@ Ensure the following channels are enabled
 `qcow2` can then be transformed to VDI if/when need be.
 
 
-== RHEL 7 Pre-reqs
+== Pre-reqs
 
-. Ensure the target RHEL OS has already been registered with Red Hat Network
+. Ensure the target RHEL OS has already been registered with Red Hat Network using _subscription_manager_.
 . Execute the following from your local environment:
 +
 -----
-sudo ansible-galaxy install geerlingguy.repo-epe
+sudo ansible-galaxy install geerlingguy.repo-epel
 -----
 
 == Inventory file
