@@ -15,3 +15,5 @@ mvn_root: apache-maven-3.2.5
 onprem_labs: 3scale_onpremise_implementation_labs
 swarm_service_home: "{{lab_home_dir}}/{{onprem_labs}}/services/wf_swarm_datestamp_service"
 vertx_service_home: "{{lab_home_dir}}/{{onprem_labs}}/services/vertx_greeting_service"
+
+jq_download: "jq-linux64"
