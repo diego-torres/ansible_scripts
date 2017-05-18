@@ -27,9 +27,6 @@
     - systemd
     - yum-clean
     - ssl-ca 
-    - rhsso
-    - rhsso-adapter
-    - rhsso-import
 
     - onprem-labs
 
