@@ -25,6 +25,7 @@
     - oc
     - oc-cluster-wrapper
     - systemd
+    - jq
     - yum-clean
 
     - onprem-labs
