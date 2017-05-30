@@ -12,22 +12,30 @@ Ansible will then customize this virtual machine.
 * OS : RHEL 7 x68_64
 ** RHEL is needed (instead of CENTOS) because latest supported `qpid-dispatch` libraries only come from supported RHEL channels
 +
-Ensure the following channels are enabled
-
+Ensure the following RHN channels are enabled
 *** rhel-7-server-rpms
 *** rhel-7-server-extras-rpm
 *** rhel-7-server-supplementary-rpm
-*** a-mq-interconnect-1-for-rhel-7-server-beta-rpms
+*** rhel-7-server-optional-rpms
+*** amq-interconnect-1-for-rhel-7-server-rpms
+*** amq-clients-1-for-rhel-7-server-rpms
 
+. `yum install` the following packages (which are pre-requisite for the AMQ Interconnect Router)
+* qpid-proton-c
+* python-qpid-proton
+* qpid-dispatch-router
+* qpid-dispatch-tools
+
+. Setup of the disk should be
 * Disk: 20GB, dynamically allocated, VDI format
 * Memory : 4GB
 * Base images installation:
-** Hostname: bpms
+** Hostname: rhtamq
 ** Network: on
 ** HDD Partitioning:
 *** File system : ext4
 *** boot 500 MiB, swap 2048 MiB, root partition 17.5 GiB
-** Minimal CentOS installation
+** Minimal RHEL installation
 ** No user created
 ** Root password : jb0ssredhat!
 * Post-installation tasks:
@@ -53,8 +61,8 @@ Copy the `hosts.example` file to `hosts`, and replace `<ip address of virtual ma
 == Installation Artifacts
 
 . `amq-repos/files`:
-.. jboss-amq7-7.0.0.ER15-1-maven-repository.zip
-.. jboss-amq-qpid-jms-0.20.0.redhat-2-maven-repository.zip
+.. jboss-amq-7.0.0-maven-repository.zip
+.. jboss-amq-qpid-jms-0.21.0.redhat-1-maven-repository.zip
 
 == Provisioning
 In this directory, execute the following command:
