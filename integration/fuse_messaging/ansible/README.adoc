@@ -19,9 +19,12 @@ Ansible will then customize this virtual machine.
 *** amq-interconnect-1-for-rhel-7-server-rpms
 *** amq-clients-1-for-rhel-7-server-rpms
 
-. `yum install` the following packages (which are pre-requisite for the AMQ Interconnect Router)
+. `yum install` the following packages (which are pre-requisite for the AMQ Interconnect Router and the AMQ Clients)
 * qpid-proton-c
+* qpid-proton-cpp-devel
+* qpid-proton-cpp-docs
 * python-qpid-proton
+* python-qpid-proton-docs
 * qpid-dispatch-router
 * qpid-dispatch-tools
 
