@@ -20,14 +20,14 @@ Ensure the following channels are enabled
 *** a-mq-interconnect-1-for-rhel-7-server-beta-rpms
 
 * Disk: 20GB, dynamically allocated, VDI format
-* Memory : 4GB
+* Memory : 2GB
 * Base images installation:
 ** Hostname: bpms
 ** Network: on
 ** HDD Partitioning:
 *** File system : ext4
 *** boot 500 MiB, swap 2048 MiB, root partition 17.5 GiB
-** Minimal CentOS installation
+** Minimal installation
 ** No user created
 ** Root password : jb0ssredhat!
 * Post-installation tasks:
@@ -38,13 +38,13 @@ Ensure the following channels are enabled
 `qcow2` can then be transformed to VDI if/when need be.
 
 
-== RHEL 7 Pre-reqs
+== Pre-reqs
 
-. Ensure the target RHEL OS has already been registered with Red Hat Network
+. Ensure the target RHEL OS has already been registered with Red Hat Network using _subscription_manager_.
 . Execute the following from your local environment:
 +
 -----
-sudo ansible-galaxy install geerlingguy.repo-epe
+sudo ansible-galaxy install geerlingguy.repo-epel
 -----
 
 == Inventory file
@@ -63,7 +63,11 @@ In this directory, execute the following command:
 $ ansible-playbook -i hosts fuse_messaging.yml
 -----
 
-== Sparsify qcow2 image
+== Linux only sparsify and transform image
+
+Disregard these sections if not using a linux distro as your host environment.
+
+=== Sparsify qcow2 image
 
 Sparsifying a virtual machine can make a dramatic reduction in the size of the virtual machine image.
 
@@ -87,7 +91,7 @@ export TMPDIR=/u02/vm/
 virt-sparsify --compress ose_dev.qcow2 ose_dev_sparse.qcow2
 -----
 
-== Conversion to VDI
+=== Conversion to VDI
 
 -----
 qemu-img convert -O vdi fuse_messaging_ga-1.0.qcow2 fuse_messaging_ga-1.0.vdi

@@ -25,11 +25,8 @@
     - oc
     - oc-cluster-wrapper
     - systemd
+    - jq
     - yum-clean
-    - ssl-ca 
-    - rhsso
-    - rhsso-adapter
-    - rhsso-import
 
     - onprem-labs
 

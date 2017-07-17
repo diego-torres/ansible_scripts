@@ -20,3 +20,5 @@ not4git/
 *.settings/
 docker.pid
 *test.yml
+hosts
+jq-linux64
