@@ -10,9 +10,10 @@
 - name: wait for server to restart
   wait_for:
     host: "{{ inventory_hostname }}"
-    port: 22
+    port: 5022
     state: started
     delay: 25
     timeout: 200
+  become: false
   delegate_to: 127.0.0.1
   when: updatepackages.changed

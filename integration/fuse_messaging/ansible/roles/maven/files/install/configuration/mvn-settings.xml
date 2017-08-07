@@ -88,9 +88,9 @@
         </profile>
     </profiles>
     <activeProfiles>
-        <!-- Optionally, make the repository active by default -->
+        <!-- Uncomment to activate the profiles
         <activeProfile>amq7-repository</activeProfile>
         <activeProfile>jboss-ga-repository</activeProfile>
-        <activeProfile>jboss-earlyaccess-repository</activeProfile>
+        <activeProfile>jboss-earlyaccess-repository</activeProfile> -->
     </activeProfiles>
 </settings>

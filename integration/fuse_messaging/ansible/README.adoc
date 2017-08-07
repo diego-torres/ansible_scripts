@@ -31,9 +31,12 @@ Ansible will then customize this virtual machine.
 . Setup of the disk should be
 * Disk: 20GB, dynamically allocated, VDI format
 * Memory : 4GB
+* Shared Folder : /media/sf_sharedfolder
+* Software Archive Folder : /opt/sw
 * Base images installation:
 ** Hostname: rhtamq
 ** Network: on
+** Firewalld service must be turned off using this command: ``% sudo systemctl stop firewalld`
 ** HDD Partitioning:
 *** File system : ext4
 *** boot 500 MiB, swap 2048 MiB, root partition 17.5 GiB
