@@ -10,7 +10,7 @@
 - name: wait for server to restart
   wait_for:
     host: "{{ inventory_hostname }}"
-    port: 5022
+    port: 22
     state: started
     delay: 25
     timeout: 200

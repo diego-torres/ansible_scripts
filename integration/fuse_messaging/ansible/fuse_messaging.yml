@@ -1,8 +1,5 @@
 - hosts: fuse_messaging
-  remote_user: jboss
-  become: yes
-  become_user: root
-  become_method: sudo
+  remote_user: root
   vars_prompt:
     - name: is_ravello
       prompt: "Is this a VM that will be managed by GPTE CloudForms (y/n)? "
