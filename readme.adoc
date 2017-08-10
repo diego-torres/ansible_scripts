@@ -1,0 +1,34 @@
+= OPEN VIRTUAL: Ansible Playbooks for OPEN Program Course VM image provisioning
+
+== Contact Info
+* gpe-mw-training@redhat.com
+
+== Pre-Requisites
+* A workstation
+* Preferred operating system is RHEL / FEDORA (MAC OSX or Microsoft Windows as alternatives)
+* KVM + Libvirt (Oracle VirtualBox is alternatives)
+
+== Introduction
+
+The OPEN Virtual project contains Ansible Playbooks and other types of scripts, created with the goal of provisioning VM images for OPEN Program courses.
+Remember to refer to the link:/doc/VM_provisioning_guide.doc[document] on VM provisioning in order to proceed.
+
+Here's a brief description of the project subfolders:
+
+=== Integration
+* Ansible playbooks for provisioning of Enterprise Integration course VMs
+
+=== Automation
+* Ansible playbooks for provisioning of Business Automation course VMs
+
+=== Mobile
+* Scripts for provisioning of Mobility course VMs
+
+=== Base
+* Docker and Vagrant files
+
+=== Doc
+* Best Practices and Instructional Guides to provisioning VMs
+
+=== VM
+* Non-Ansible scripts for course VM setup and cleanup
