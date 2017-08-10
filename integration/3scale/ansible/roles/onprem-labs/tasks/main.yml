@@ -25,4 +25,14 @@
   become: yes
   become_user: "{{user}}"
 
+- name: chown of {{onprem_labs}}
+  file:
+    path: "{{lab_home_dir}}/{{onprem_labs}}"
+    owner: "{{user}}"
+    group: "{{user}}"
 
+- name: chown of /home/{{user}}/.m2
+  file:
+    path: "/home/{{user}}/.m2"
+    owner: "{{user}}"
+    group: "{{user}}"
