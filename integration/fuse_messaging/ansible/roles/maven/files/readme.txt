@@ -1,1 +1,1 @@
-apache-maven-3.2.5-bin.zip
+Latest Maven tarball installer goes here
