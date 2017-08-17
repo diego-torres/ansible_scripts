@@ -17,12 +17,13 @@ Ensure the following channels are enabled
 *** rhel-7-server-rpms
 *** rhel-7-server-extras-rpm
 *** rhel-7-server-supplementary-rpm
-*** a-mq-interconnect-1-for-rhel-7-server-beta-rpms
+*** a-mq-interconnect-1-for-rhel-7-server-rpms
+*** a-mq-clients-1-for-rhel-7-server-rpms
 
 * Disk: 20GB, dynamically allocated, VDI format
 * Memory : 2GB
 * Base images installation:
-** Hostname: bpms
+** Hostname: rhtamq
 ** Network: on
 ** HDD Partitioning:
 *** File system : ext4
