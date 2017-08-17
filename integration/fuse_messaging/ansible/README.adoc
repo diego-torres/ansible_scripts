@@ -66,8 +66,8 @@ Copy the `hosts.example` file to `hosts`, and replace `<ip address of virtual ma
 == Installation Artifacts
 
 . `amq-repos/files`:
-.. jboss-amq-7.0.0-maven-repository.zip
-.. jboss-amq-qpid-jms-0.21.0.redhat-1-maven-repository.zip
+.. Maven repository for AMQ 7 broker
+.. Maven repository for AMQ 7 QPID client
 
 == Provisioning
 In this directory, execute the following command:
