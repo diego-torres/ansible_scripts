@@ -26,6 +26,7 @@
     - java
     - maven
     - amq-repos
+    - amq-clients    
     - oc
     - yum-clean
     - amq

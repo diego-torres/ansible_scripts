@@ -1,0 +1,8 @@
+---
+
+- name: unzip AMQ NODE JS Client to {{amq_install_dir}}
+  unarchive:
+    src: "nodejs-rhea-0.2.0-1.zip"
+    dest: "/opt/install"
+    owner: "{{user}}"
+    group: "{{user}}"
