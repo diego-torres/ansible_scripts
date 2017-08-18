@@ -16,6 +16,7 @@
     - java
     - mariadb
     - mariadb-bpms-schema
+    - mariadb-pquote-reporting-schema
     - bpms
     - jbds
     - maven

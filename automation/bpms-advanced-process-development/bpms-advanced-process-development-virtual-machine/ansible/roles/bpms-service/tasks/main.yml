@@ -1,0 +1,25 @@
+---
+  - name: Validate bpms installation
+    stat: path={{lab_home_dir}}/bpms
+    register: bpms_install
+  - shell: "{{lab_home_dir}}/install-bpms.sh"
+    become: yes
+    become_user: "{{user}}"
+    when: bpms_install.stat.exists == False
+  - shell: "{{lab_home_dir}}/reset.sh"
+    become: yes
+    become_user: "{{user}}"
+  - name: Validate BPMS service installation
+    stat: path=/usr/lib/systemd/system/bpms.service
+    register: bpms_service_out
+  - name: send service configuration template
+    template:
+      src: bpms.service
+      dest: /usr/lib/systemd/system/bpms.service
+      mode: "u=rw,g=r,o=r"
+    when: bpms_service_out.stat.exists == False
+  - name: start and enable new bpms service
+    service:
+      name: bpms
+      state: started
+      enabled: true

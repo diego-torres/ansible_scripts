@@ -1,1 +1,0 @@
-ssl_install_dir: "{{lab_home_dir}}/ssl"

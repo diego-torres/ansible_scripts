@@ -1,0 +1,6 @@
+---
+
+- name: copy vimrc
+  copy:
+    src: vimrc
+    dest: /home/{{user}}/.vimrc

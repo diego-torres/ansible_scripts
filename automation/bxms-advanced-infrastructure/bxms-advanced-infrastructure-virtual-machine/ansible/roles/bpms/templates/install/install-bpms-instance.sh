@@ -100,10 +100,10 @@ then
     then
       echo "Removing existing installation"
       rm -rf $BPMS_HOME/$BPMS_ROOT
-    else  
+    else
       echo "Target directory already exists. Please remove it before installing BPMS again."
       exit 250
-  fi 
+  fi
 fi
 
 # Install bpms
@@ -143,7 +143,7 @@ fi
 
 # Kie server has no quartz library
 if [ ! -f  $BPMS_HOME/$BPMS_ROOT/standalone/deployments/kie-server.war/WEB-INF/lib/quartz-1.8.5.jar ];
-then 
+then
    echo "Copying quartz library to kie-server deployment"
    cp $BPMS_HOME/$BPMS_ROOT/standalone/deployments/business-central.war/WEB-INF/lib/quartz-1.8.5.jar \
    $BPMS_HOME/$BPMS_ROOT/standalone/deployments/kie-server.war/WEB-INF/lib
@@ -199,7 +199,7 @@ then
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.nio.git.ssh.host=$BIND_ADDRESS\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.api.userManagementServices=WildflyCLIUserManagementService\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.wildfly.cli.host=localhost\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.wildfly.cli.port=9999\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.ext.security.management.wildfly.cli.port=9990\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.guvnor.m2repo.dir=$BPMS_DATA_DIR/m2/repository\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.nio.git.dir=$BPMS_DATA_DIR/$REPO_DIR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.uberfire.metadata.index.dir=$BPMS_DATA_DIR/$REPO_DIR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
@@ -219,7 +219,7 @@ fi
 # kie-server
 if [ "$KIE_SERVER" = "true" ]
 then
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.id=kie-server-$IP_ADDR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf  
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.id=kie-server-$IP_ADDR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.location=http://${IP_ADDR}:${KIE_SERVER_PORT}/kie-server/services/rest/server\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.server.ext.disabled=$BPMS_EXT_DISABLED\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.drools.server.ext.disabled=$BRMS_EXT_DISABLED\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
@@ -235,17 +235,17 @@ then
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.ht.callback=props\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Djbpm.user.group.mapping=file:${BPMS_HOME}/${BPMS_ROOT}/standalone/configuration/application-roles.properties\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.ht.userinfo=props\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Djbpm.user.info.properties=file:${BPMS_HOME}/${BPMS_ROOT}/standalone/configuration/bpms-userinfo.properties\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf  
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Djbpm.user.info.properties=file:${BPMS_HOME}/${BPMS_ROOT}/standalone/configuration/bpms-userinfo.properties\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 elif [ "$KIE_SERVER" = "true" ]
 then
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.ht.callback=jaas\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.ht.userinfo=props\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf  
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.ht.userinfo=props\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Djbpm.user.info.properties=file:${BPMS_HOME}/${BPMS_ROOT}/standalone/configuration/bpms-userinfo.properties\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 fi
 
 # managed kie-server
 KIE_SERVER_CONTROLLER_IP=$IP_ADDR
-if [ "$KIE_SERVER" = "true" -a "$KIE_SERVER_MANAGED" = "true" ] 
+if [ "$KIE_SERVER" = "true" -a "$KIE_SERVER_MANAGED" = "true" ]
 then
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller=http://${KIE_SERVER_CONTROLLER_IP}:${BUSINESS_CENTRAL_PORT}/business-central/rest/controller\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller.user=kieserver\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf

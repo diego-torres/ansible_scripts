@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kpis>
+  <dataprovider code="dataprovider_54191486578915677" type="sql">
+    <description language="en">fact_bounce_by_reason</description>
+    <sqlprovider>
+      <datasource>pquoteReportingDs</datasource>
+<query>SELECT `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, COUNT(*) AS bounce_count, bounce_reason
+FROM `FACT_QUOTES` INNER JOIN `DIM_MONTHS` ON `FACT_QUOTES`.quote_month = `DIM_MONTHS`.month_id
+WHERE bounced = 1
+AND {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_MONTHS`.`numeric_month`, filter_month}
+GROUP BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, bounce_reason</query>
+    </sqlprovider>
+    <dataproperties>
+      <dataproperty id="year">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">year</name>
+        <name language="es">year</name>
+        <name language="pt">year</name>
+        <name language="fr">year</name>
+        <name language="en">year</name>
+        <name language="ja">year</name>
+      </dataproperty>
+      <dataproperty id="numeric_month">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">numeric_month</name>
+        <name language="es">numeric_month</name>
+        <name language="pt">numeric_month</name>
+        <name language="fr">numeric_month</name>
+        <name language="en">numeric_month</name>
+        <name language="ja">numeric_month</name>
+      </dataproperty>
+      <dataproperty id="bounce_count">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="de">bounce_count</name>
+        <name language="es">bounce_count</name>
+        <name language="pt">bounce_count</name>
+        <name language="fr">bounce_count</name>
+        <name language="en">bounce_count</name>
+        <name language="ja">bounce_count</name>
+      </dataproperty>
+      <dataproperty id="bounce_reason">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">bounce_reason</name>
+        <name language="es">bounce_reason</name>
+        <name language="pt">bounce_reason</name>
+        <name language="fr">bounce_reason</name>
+        <name language="en">bounce_reason</name>
+        <name language="ja">bounce_reason</name>
+      </dataproperty>
+    </dataproperties>
+  </dataprovider>
+  <dataprovider code="dataprovider_62131486578479016" type="sql">
+    <description language="en">fact_incidents_by_state</description>
+    <sqlprovider>
+      <datasource>pquoteReportingDs</datasource>
+      <query type="default">SELECT COUNT(*) AS incidents, `DIM_MONTHS`.`year`, `DIM_MONTHS`.month_name, `DIM_STATES`.state_abbr
+FROM `FACT_INCIDENTS`
+INNER JOIN `DIM_STATES` ON `FACT_INCIDENTS`.state_id = `DIM_STATES`.state_id
+INNER JOIN `DIM_MONTHS` ON `FACT_INCIDENTS`.incident_month = `DIM_MONTHS`.month_id
+WHERE {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_STATES`.state_abbr, filter_state}
+AND {sql_condition, optional, `DIM_MONTHS`.month_name, filter_month}
+GROUP BY `DIM_STATES`.state_abbr, `DIM_MONTHS`.`year`, `DIM_MONTHS`.month_name
+ORDER BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.month_name, state_abbr;</query>
+      <query type="mysql">SELECT COUNT(*) AS incidents, `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, `DIM_STATES`.state_abbr, incident_reason, driver_age_classification
+FROM `FACT_INCIDENTS`
+INNER JOIN `DIM_STATES` ON `FACT_INCIDENTS`.state_id = `DIM_STATES`.state_id
+INNER JOIN `DIM_MONTHS` ON `FACT_INCIDENTS`.incident_month = `DIM_MONTHS`.month_id
+WHERE {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_STATES`.state_abbr, filter_state}
+AND {sql_condition, optional, `DIM_MONTHS`.numeric_month, filter_month}
+GROUP BY `DIM_STATES`.state_abbr, `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, incident_reason, driver_age_classification</query>
+    </sqlprovider>
+    <dataproperties>
+      <dataproperty id="incidents">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="de">incidents</name>
+        <name language="es">incidents</name>
+        <name language="pt">incidents</name>
+        <name language="fr">incidents</name>
+        <name language="en">incidents</name>
+        <name language="ja">incidents</name>
+      </dataproperty>
+      <dataproperty id="year">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">year</name>
+        <name language="es">year</name>
+        <name language="pt">year</name>
+        <name language="fr">year</name>
+        <name language="en">year</name>
+        <name language="ja">year</name>
+      </dataproperty>
+      <dataproperty id="numeric_month">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+      </dataproperty>
+      <dataproperty id="state_abbr">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">state_abbr</name>
+        <name language="es">state_abbr</name>
+        <name language="pt">state_abbr</name>
+        <name language="fr">state_abbr</name>
+        <name language="en">state_abbr</name>
+        <name language="ja">state_abbr</name>
+      </dataproperty>
+      <dataproperty id="incident_reason">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+      </dataproperty>
+      <dataproperty id="driver_age_classification">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+      </dataproperty>
+    </dataproperties>
+  </dataprovider>
+  <dataprovider code="dataprovider_71221486578726273" type="sql">
+    <description language="en">fact_monthly_bounce_rate</description>
+    <sqlprovider>
+      <datasource>pquoteReportingDs</datasource>
+      <query type="default">SELECT `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, SUM(bounced)/(SUM(purchased) + SUM(bounced)) * 100 AS bounce_rate
+FROM `FACT_QUOTES` INNER JOIN `DIM_MONTHS` ON `FACT_QUOTES`.quote_month = `DIM_MONTHS`.month_id
+WHERE {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_MONTHS`.`numeric_month`, filter_month}
+GROUP BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month</query>
+      <query type="mysql">SELECT `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, SUM(bounced)/(SUM(purchased) + SUM(bounced)) * 100 AS bounce_rate
+FROM `FACT_QUOTES` INNER JOIN `DIM_MONTHS` ON `FACT_QUOTES`.quote_month = `DIM_MONTHS`.month_id
+WHERE {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_MONTHS`.`numeric_month`, filter_month}
+GROUP BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month</query>
+    </sqlprovider>
+    <dataproperties>
+      <dataproperty id="year">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">year</name>
+        <name language="es">year</name>
+        <name language="pt">year</name>
+        <name language="fr">year</name>
+        <name language="en">year</name>
+        <name language="ja">year</name>
+      </dataproperty>
+      <dataproperty id="numeric_month">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">numeric_month</name>
+        <name language="es">numeric_month</name>
+        <name language="pt">numeric_month</name>
+        <name language="fr">numeric_month</name>
+        <name language="en">numeric_month</name>
+        <name language="ja">numeric_month</name>
+      </dataproperty>
+      <dataproperty id="bounce_rate">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="de">bounce_rate</name>
+        <name language="es">bounce_rate</name>
+        <name language="pt">bounce_rate</name>
+        <name language="fr">bounce_rate</name>
+        <name language="en">bounce_rate</name>
+        <name language="ja">bounce_rate</name>
+      </dataproperty>
+    </dataproperties>
+  </dataprovider>
+  <dataprovider code="dataprovider_39691486578590546" type="sql">
+    <description language="en">fact_monthly_sales</description>
+    <sqlprovider>
+      <datasource>pquoteReportingDs</datasource>
+      <query type="default">SELECT `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, SUM(price) - SUM(priceDiscount) AS sale
+FROM `FACT_QUOTES` INNER JOIN `DIM_MONTHS` ON `FACT_QUOTES`.quote_month = `DIM_MONTHS`.month_id
+WHERE purchased = 1
+GROUP BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month</query>
+      <query type="mysql">SELECT `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month, SUM(price) - SUM(priceDiscount) AS sale
+FROM `FACT_QUOTES` INNER JOIN `DIM_MONTHS` ON `FACT_QUOTES`.quote_month = `DIM_MONTHS`.month_id
+WHERE purchased = 1
+AND {sql_condition, optional, `DIM_MONTHS`.`year`, filter_year}
+AND {sql_condition, optional, `DIM_MONTHS`.`numeric_month`, filter_month}
+GROUP BY `DIM_MONTHS`.`year`, `DIM_MONTHS`.numeric_month</query>
+    </sqlprovider>
+    <dataproperties>
+      <dataproperty id="year">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">year</name>
+        <name language="es">year</name>
+        <name language="pt">year</name>
+        <name language="fr">year</name>
+        <name language="en">year</name>
+        <name language="ja">year</name>
+      </dataproperty>
+      <dataproperty id="numeric_month">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">numeric_month</name>
+        <name language="es">numeric_month</name>
+        <name language="pt">numeric_month</name>
+        <name language="fr">numeric_month</name>
+        <name language="en">numeric_month</name>
+        <name language="ja">numeric_month</name>
+      </dataproperty>
+      <dataproperty id="sale">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="de">sale</name>
+        <name language="es">sale</name>
+        <name language="pt">sale</name>
+        <name language="fr">sale</name>
+        <name language="en">sale</name>
+        <name language="ja">sale</name>
+      </dataproperty>
+    </dataproperties>
+  </dataprovider>
+  <kpi code="kpi_15081486580097071">
+    <description language="en">Bounce by Reason</description>
+    <provider code="dataprovider_54191486578915677" />
+    <displayer type="piechart" renderer="ofc2">
+      <domain>
+        <propertyid>bounce_reason</propertyid>
+        <name language="de">bounce_reason</name>
+        <name language="es">bounce_reason</name>
+        <name language="pt">bounce_reason</name>
+        <name language="fr">bounce_reason</name>
+        <name language="en">bounce_reason</name>
+        <name language="ja">bounce_reason</name>
+        <maxnumberofintervals>10</maxnumberofintervals>
+      </domain>
+      <range>
+        <propertyid>bounce_count</propertyid>
+        <name language="de">bounce_count</name>
+        <name language="es">bounce_count</name>
+        <name language="pt">bounce_count</name>
+        <name language="fr">bounce_count</name>
+        <name language="en">bounce_count</name>
+        <name language="ja">bounce_count</name>
+        <scalarfunction>sum</scalarfunction>
+        <unit language="en">{value}</unit>
+      </range>
+      <type>pie</type>
+      <intervalsortcriteria>1</intervalsortcriteria>
+      <intervalsortorder>1</intervalsortorder>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>true</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>true</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_15421486580954983">
+    <description language="en">Incidents By Reason</description>
+    <provider code="dataprovider_62131486578479016" />
+    <displayer type="piechart" renderer="ofc2">
+      <domain>
+        <propertyid>incident_reason</propertyid>
+        <name language="en">incident_reason</name>
+        <maxnumberofintervals>15</maxnumberofintervals>
+      </domain>
+      <range>
+        <propertyid>incidents</propertyid>
+        <name language="de">incidents</name>
+        <name language="es">incidents</name>
+        <name language="pt">incidents</name>
+        <name language="fr">incidents</name>
+        <name language="en">incidents</name>
+        <name language="ja">incidents</name>
+        <scalarfunction>sum</scalarfunction>
+        <unit language="en">{value}</unit>
+      </range>
+      <type>pie</type>
+      <intervalsortcriteria>1</intervalsortcriteria>
+      <intervalsortorder>1</intervalsortorder>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>false</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>false</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_15511486580991288">
+    <description language="en">Incidents by age</description>
+    <provider code="dataprovider_62131486578479016" />
+    <displayer type="piechart" renderer="ofc2">
+      <domain>
+        <propertyid>driver_age_classification</propertyid>
+        <maxnumberofintervals>10</maxnumberofintervals>
+      </domain>
+      <range>
+        <propertyid>incidents</propertyid>
+        <name language="de">incidents</name>
+        <name language="es">incidents</name>
+        <name language="pt">incidents</name>
+        <name language="fr">incidents</name>
+        <name language="en">incidents</name>
+        <name language="ja">incidents</name>
+        <scalarfunction>sum</scalarfunction>
+        <unit language="en">{value}</unit>
+      </range>
+      <type>pie</type>
+      <intervalsortcriteria>1</intervalsortcriteria>
+      <intervalsortorder>1</intervalsortorder>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>true</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>true</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_15611486581148115">
+    <description language="en">Incidents by state</description>
+    <provider code="dataprovider_62131486578479016" />
+    <displayer type="piechart" renderer="ofc2">
+      <domain>
+        <propertyid>state_abbr</propertyid>
+        <name language="de">state_abbr</name>
+        <name language="es">state_abbr</name>
+        <name language="pt">state_abbr</name>
+        <name language="fr">state_abbr</name>
+        <name language="en">state_abbr</name>
+        <name language="ja">state_abbr</name>
+        <maxnumberofintervals>15</maxnumberofintervals>
+        <intervalstohide language="en">Others</intervalstohide>
+      </domain>
+      <range>
+        <propertyid>incidents</propertyid>
+        <name language="de">incidents</name>
+        <name language="es">incidents</name>
+        <name language="pt">incidents</name>
+        <name language="fr">incidents</name>
+        <name language="en">incidents</name>
+        <name language="ja">incidents</name>
+        <scalarfunction>sum</scalarfunction>
+        <unit language="en">{value}</unit>
+      </range>
+      <type>pie</type>
+      <intervalsortcriteria>1</intervalsortcriteria>
+      <intervalsortorder>1</intervalsortorder>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>true</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>true</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_14981486580053566">
+    <description language="en">Monthly Bounce Rate</description>
+    <provider code="dataprovider_71221486578726273" />
+    <displayer type="linechart" renderer="ofc2">
+      <domain>
+        <propertyid>numeric_month</propertyid>
+        <name language="de">numeric_month</name>
+        <name language="es">numeric_month</name>
+        <name language="pt">numeric_month</name>
+        <name language="fr">numeric_month</name>
+        <name language="en">numeric_month</name>
+        <name language="ja">numeric_month</name>
+        <maxnumberofintervals>13</maxnumberofintervals>
+        <intervalstohide language="en">Others</intervalstohide>
+      </domain>
+      <range>
+        <propertyid>bounce_rate</propertyid>
+        <name language="de">bounce_rate</name>
+        <name language="es">bounce_rate</name>
+        <name language="pt">bounce_rate</name>
+        <name language="fr">bounce_rate</name>
+        <name language="en">bounce_rate</name>
+        <name language="ja">bounce_rate</name>
+        <scalarfunction>average</scalarfunction>
+      </range>
+      <type>line</type>
+      <intervalsortcriteria>0</intervalsortcriteria>
+      <intervalsortorder>-1</intervalsortorder>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <labelanglexaxis>-45</labelanglexaxis>
+      <showlinesarea>false</showlinesarea>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>true</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>true</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_15411486580860499">
+    <description language="en">Monthly Incidents</description>
+    <provider code="dataprovider_62131486578479016" />
+    <displayer type="linechart" renderer="ofc2">
+      <domain>
+        <propertyid>numeric_month</propertyid>
+        <name language="en">numeric_month</name>
+        <maxnumberofintervals>13</maxnumberofintervals>
+        <intervalstohide language="en">Others</intervalstohide>
+      </domain>
+      <range>
+        <propertyid>incidents</propertyid>
+        <name language="de">incidents</name>
+        <name language="es">incidents</name>
+        <name language="pt">incidents</name>
+        <name language="fr">incidents</name>
+        <name language="en">incidents</name>
+        <name language="ja">incidents</name>
+        <scalarfunction>sum</scalarfunction>
+      </range>
+      <type>line</type>
+      <intervalsortcriteria>0</intervalsortcriteria>
+      <intervalsortorder>-1</intervalsortorder>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <labelanglexaxis>-45</labelanglexaxis>
+      <showlinesarea>false</showlinesarea>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>true</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>true</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_14771486579838212">
+    <description language="en">Monthly Sales</description>
+    <provider code="dataprovider_39691486578590546" />
+    <displayer type="linechart" renderer="ofc2">
+      <domain>
+        <propertyid>numeric_month</propertyid>
+        <name language="de">numeric_month</name>
+        <name language="es">numeric_month</name>
+        <name language="pt">numeric_month</name>
+        <name language="fr">numeric_month</name>
+        <name language="en">numeric_month</name>
+        <name language="ja">numeric_month</name>
+        <maxnumberofintervals>13</maxnumberofintervals>
+        <intervalstohide language="en">Others</intervalstohide>
+      </domain>
+      <range>
+        <propertyid>sale</propertyid>
+        <name language="de">sale</name>
+        <name language="es">sale</name>
+        <name language="pt">sale</name>
+        <name language="fr">sale</name>
+        <name language="en">sale</name>
+        <name language="ja">sale</name>
+        <scalarfunction>sum</scalarfunction>
+      </range>
+      <type>line</type>
+      <intervalsortcriteria>0</intervalsortcriteria>
+      <intervalsortorder>-1</intervalsortorder>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <labelanglexaxis>-45</labelanglexaxis>
+      <showlinesarea>false</showlinesarea>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>true</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>true</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_15401486580836795">
+    <description language="en">Year Incidents</description>
+    <provider code="dataprovider_62131486578479016" />
+    <displayer type="barchart" renderer="ofc2">
+      <domain>
+        <propertyid>year</propertyid>
+        <name language="de">year</name>
+        <name language="es">year</name>
+        <name language="pt">year</name>
+        <name language="fr">year</name>
+        <name language="en">year</name>
+        <name language="ja">year</name>
+        <maxnumberofintervals>10</maxnumberofintervals>
+      </domain>
+      <range>
+        <propertyid>incidents</propertyid>
+        <name language="de">incidents</name>
+        <name language="es">incidents</name>
+        <name language="pt">incidents</name>
+        <name language="fr">incidents</name>
+        <name language="en">incidents</name>
+        <name language="ja">incidents</name>
+        <scalarfunction>sum</scalarfunction>
+        <unit language="en">{value}</unit>
+      </range>
+      <type>bar_filled</type>
+      <intervalsortcriteria>0</intervalsortcriteria>
+      <intervalsortorder>-1</intervalsortorder>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <labelanglexaxis>-45</labelanglexaxis>
+      <showlinesarea>false</showlinesarea>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>true</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>true</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_14671486579654818">
+    <description language="en">Year Sales</description>
+    <provider code="dataprovider_39691486578590546" />
+    <displayer type="barchart" renderer="ofc2">
+      <domain>
+        <propertyid>year</propertyid>
+        <name language="de">year</name>
+        <name language="es">year</name>
+        <name language="pt">year</name>
+        <name language="fr">year</name>
+        <name language="en">year</name>
+        <name language="ja">year</name>
+        <maxnumberofintervals>10</maxnumberofintervals>
+      </domain>
+      <range>
+        <propertyid>sale</propertyid>
+        <name language="de">sale</name>
+        <name language="es">sale</name>
+        <name language="pt">sale</name>
+        <name language="fr">sale</name>
+        <name language="en">sale</name>
+        <name language="ja">sale</name>
+        <scalarfunction>sum</scalarfunction>
+        <unit language="en">{value}</unit>
+      </range>
+      <type>bar_filled</type>
+      <intervalsortcriteria>0</intervalsortcriteria>
+      <intervalsortorder>-1</intervalsortorder>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <labelanglexaxis>-45</labelanglexaxis>
+      <showlinesarea>false</showlinesarea>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>true</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>true</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_14871486579935346">
+    <description language="en">Year bounce rate</description>
+    <provider code="dataprovider_71221486578726273" />
+    <displayer type="barchart" renderer="ofc2">
+      <domain>
+        <propertyid>year</propertyid>
+        <name language="de">year</name>
+        <name language="es">year</name>
+        <name language="pt">year</name>
+        <name language="fr">year</name>
+        <name language="en">year</name>
+        <name language="ja">year</name>
+        <maxnumberofintervals>10</maxnumberofintervals>
+      </domain>
+      <range>
+        <propertyid>bounce_rate</propertyid>
+        <name language="de">bounce_rate</name>
+        <name language="es">bounce_rate</name>
+        <name language="pt">bounce_rate</name>
+        <name language="fr">bounce_rate</name>
+        <name language="en">bounce_rate</name>
+        <name language="ja">bounce_rate</name>
+        <scalarfunction>average</scalarfunction>
+        <unit language="en">{value}</unit>
+      </range>
+      <type>bar_filled</type>
+      <intervalsortcriteria>0</intervalsortcriteria>
+      <intervalsortorder>-1</intervalsortorder>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <labelanglexaxis>-45</labelanglexaxis>
+      <showlinesarea>false</showlinesarea>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>true</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>true</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+</kpis>

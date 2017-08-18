@@ -1,0 +1,49 @@
+---
+  - name: Validate BPMS service installation
+    stat: path=/etc/init.d/bpms
+    register: bpms_service_out
+  - fail:
+      msg: "The BPMS service has not been installed: execute the bpms-service role before retrying"
+    when: bpms_service_out.stat.exists == False
+  - name: stop service if it exists
+    service:
+      name: bpms
+      state: stopped
+  - shell: "{{lab_home_dir}}/reset.sh"
+    become: yes
+    become_user: "{{user}}"
+  - name: Validate groups for bpms jboss user
+    lineinfile:
+      dest: "{{lab_home_dir}}/bpms/standalone/configuration/application-roles.properties"
+      regexp: '^jboss=(.*)'
+      line: 'jboss=admin,analyst,user,kie-server,rest-all,support,development,agent,administrators'
+  - name: Validate groups for bpms user1 user
+    lineinfile:
+      dest: "{{lab_home_dir}}/bpms/standalone/configuration/application-roles.properties"
+      regexp: '^user1=(.*)'
+      line: 'user1=kie-server,rest-task,rest-query,agent'
+  - name: Enable svg extension
+    lineinfile:
+      dest: "{{lab_home_dir}}/bpms/standalone/deployments/business-central.war/org.kie.workbench.KIEWebapp/profiles/jbpm.xml"
+      regexp: '<storesvgonsave enabled="(.*)"\/>'
+      line: "<storesvgonsave enabled=\"true\" />"
+  - name: start and enable new bpms service
+    service:
+      name: bpms
+      state: started
+      enabled: true
+  - name: Clone labs repository from gitHub
+    git:
+      repo: https://github.com/gpe-mw-training/advanced-process-development-labs.git
+      dest: "{{lab_home_dir}}/advanced-process-development-labs"
+      force: yes
+    become: yes
+    become_user: "{{user}}"
+  - name: Make maven components
+    shell: "{{lab_home_dir}}/mvn/{{mvn_root}}/bin/mvn clean install -f {{pquote_repo}}/{{item}} -B > {{lab_home_dir}}/mvn_{{item}}.log"
+    args:
+      chdir: "{{lab_home_dir}}/advanced-process-development-labs"
+    become: yes
+    become_user: "{{user}}"
+    with_items:
+      - policyquote-datamodel

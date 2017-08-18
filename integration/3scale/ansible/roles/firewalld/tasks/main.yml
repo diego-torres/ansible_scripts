@@ -7,7 +7,10 @@
 
 - name: bounce firewalld
   command: systemctl enable firewalld.service
-  command: systemctl restart firewalld.service
+- command: systemctl restart firewalld.service
+
+####################################################################################
+#  OCP related requirements
 
 - name: Configure firewalld to allow for remote access to OCP Master web interface 
   firewalld:
@@ -18,6 +21,22 @@
     port: 443/tcp
     permanent: true
     state: enabled
+- firewalld:
+    port: 53/udp
+    permanent: true
+    state: enabled
+- firewalld:
+    port: 8053/udp
+    permanent: true
+    state: enabled
+
+-  command: firewall-cmd --permanent --zone public --add-source 172.17.0.0/16
 
 - name: bounce firewalld
   command: systemctl restart firewalld.service
+
+- name: Enable IP Forwarding to support OCP
+  command: echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+- command: sysctl -p /etc/sysctl.conf
+
+####################################################################################

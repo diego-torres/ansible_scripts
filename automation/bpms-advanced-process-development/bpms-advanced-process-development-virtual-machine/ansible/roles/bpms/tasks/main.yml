@@ -18,11 +18,16 @@
   template: src={{item}} dest={{install_script_dir}}/{{bpms_install_script_dir}}
   with_items:
     - install/scripts/mysql-bpms-datasource-config.xml
+    - install/scripts/mysql-pquote-reporting-datasource-config.xml
     - install/scripts/mysql-driver-config.xml
     - install/scripts/mysql-module.xml
     - install/scripts/mysql-quartz-datasource-config.xml
     - install/scripts/quartz.properties
     - install/scripts/standalone.xml
+    - install/scripts/pquote.workspace
+    - install/scripts/pquote.kpis
+    - install/scripts/pquote.datasource
+    - install/scripts/jbpm.datasource
 
 - name: Create installation resources directory
   file: path={{install_script_dir}}/{{bpms_install_script_dir}}/{{bpms_resources_dir}} state=directory mode=0755
@@ -34,7 +39,7 @@
   copy: src={{bpms_distro}} dest={{install_script_dir}}/{{bpms_install_script_dir}}/{{bpms_resources_dir}}/{{bpms_distro}}
 
 - name: Set file permissions
-  file: 
+  file:
     path={{install_script_dir}}/{{bpms_install_script_dir}}/{{item}}
     mode=0775
   with_items:

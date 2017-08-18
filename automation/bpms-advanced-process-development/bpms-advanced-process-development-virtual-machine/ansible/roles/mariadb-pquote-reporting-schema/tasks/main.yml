@@ -1,0 +1,36 @@
+---
+
+- name: Ensure Mariadb is started
+  service: name=mariadb state=started
+
+- name: Create installation directory
+  file: path={{install_script_dir}}/{{mysqlddl_install_script_dir}} state=directory mode=0755
+
+- name : Copy installation files
+  copy: src=install/ dest={{install_script_dir}}/{{mysqlddl_install_script_dir}}
+
+- name: create pquote_reporting database and corresponding user
+  mysql_db:
+    name: "{{ pquote_reporting_mysql_db_name}}"
+    state: present
+  become: yes
+  become_user: "{{user}}"
+- mysql_user:
+    name: "{{pquote_reporting_mysql_user}}"
+    password: "{{pquote_reporting_mysql_password}}"
+    priv: 'pquote_reporting.*:ALL'
+    state: present
+- mysql_user:
+    name: "{{pquote_reporting_mysql_user}}"
+    password: "{{pquote_reporting_mysql_password}}"
+    priv: 'pquote_reporting.*:ALL'
+    state: present
+    host: "%"
+
+- name: import data into {{ pquote_reporting_mysql_db_name }} RDBMS
+  mysql_db:
+    name: "{{ pquote_reporting_mysql_db_name }}"
+    state: import
+    target: "{{install_script_dir}}/{{mysqlddl_install_script_dir}}/sql/pquote-reporting.sql"
+  async: 1000
+  poll: 0

@@ -1,0 +1,12 @@
+<datasource jndi-name="java:jboss/datasources/pquoteReportingDS" pool-name="pquoteReportingDS" enabled="true">
+  <connection-url>jdbc:mysql://${mysql.host.ip}:${mysql.host.port}/${mysql.pquote_reporting.schema}?transformedBitIsBoolean=true&amp;sessionVariables=storage_engine=InnoDB</connection-url>
+  <driver>mysql</driver>
+  <security>
+    <user-name>{{pquote_reporting_mysql_user}}</user-name>
+    <password>{{pquote_reporting_mysql_password}}</password>
+  </security>
+  <validation>
+    <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker"/>
+    <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLExceptionSorter"/>
+  </validation>
+</datasource>

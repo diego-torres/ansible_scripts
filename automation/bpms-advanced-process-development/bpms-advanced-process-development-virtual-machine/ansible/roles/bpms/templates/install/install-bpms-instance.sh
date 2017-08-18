@@ -40,6 +40,8 @@ DATABASE=mysql
 
 # MySql schema
 MYSQL_BPMS_SCHEMA=${MYSQL_BPMS_SCHEMA:-bpms}
+MYSQL_DASHBUILDER_SCHEMA=${MYSQL_DASHBUILDER_SCHEMA:-dashbuilder}
+MYSQL_PQUOTE_REPORTING_SCHEMA=${MYSQL_PQUOTE_REPORTING_SCHEMA:-pquote_reporting}
 
 # Quartz
 QUARTZ=${QUARTZ:-true}
@@ -56,7 +58,7 @@ echo "BUSINESS_CENTRAL=$BUSINESS_CENTRAL"
 echo "KIE_SERVER=$KIE_SERVER"
 echo "DASHBOARD=$DASHBOARD"
 
-# Helper functions for sed 
+# Helper functions for sed
 # https://stackoverflow.com/questions/29613304/is-it-possible-to-escape-regex-metacharacters-reliably-with-sed
 #   quoteRe <text>
 function quoteRe() { sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a\'$'\n''\\n' <<<"$1" | tr -d '\n'; }
@@ -117,10 +119,10 @@ then
     then
       echo "Removing existing installation"
       rm -rf $BPMS_HOME/$BPMS_ROOT
-    else  
+    else
       echo "Target directory already exists. Please remove it before installing BPMS again."
       exit 250
-  fi 
+  fi
 fi
 
 set -e
@@ -166,7 +168,7 @@ cp -p $SCRIPT_DIR/standalone.xml $BPMS_HOME/$BPMS_ROOT/standalone/configuration
 
 # Kie server has no quartz library
 if [ ! -f  $BPMS_HOME/$BPMS_ROOT/standalone/deployments/kie-server.war/WEB-INF/lib/quartz-1.8.5.jar ];
-then 
+then
    echo "Copying quartz library to kie-server deployment"
    cp $BPMS_HOME/$BPMS_ROOT/standalone/deployments/business-central.war/WEB-INF/lib/quartz-1.8.5.jar \
    $BPMS_HOME/$BPMS_ROOT/standalone/deployments/kie-server.war/WEB-INF/lib
@@ -215,16 +217,19 @@ BPMS_DATASOURCE=$(cat $SCRIPT_DIR/$DATABASE-bpms-datasource-config.xml)
 # configuration : Quartz datasource
 QUARTZ_DATASOURCE=$(cat $SCRIPT_DIR/$DATABASE-quartz-datasource-config.xml)
 
+# configuration : pquote_reporting datasource
+PQUOTE_REPORTING_DATASOURCE=$(cat $SCRIPT_DIR/$DATABASE-pquote-reporting-datasource-config.xml)
+
 if [ "$QUARTZ" = "true" ];
 then
-  DATASOURCE=$BPMS_DATASOURCE$'\n'$QUARTZ_DATASOURCE
+  DATASOURCE=$BPMS_DATASOURCE$'\n'$PQUOTE_REPORTING_DATASOURCE$'\n'$QUARTZ_DATASOURCE
 else
-  DATASOURCE=$BPMS_DATASOURCE
+  DATASOURCE=$BPMS_DATASOURCE$'\n'$PQUOTE_REPORTING_DATASOURCE
 fi
 sed -i -e ':a' -e '$!{N;ba' -e '}' -e "s/$(quoteRe "<!-- ##DATASOURCES## -->")/$(quoteSubst "$DATASOURCE")/" $BPMS_HOME/$BPMS_ROOT/standalone/configuration/standalone.xml
 
 # set up mysql module
-MYSQL_MODULE_DIR=$(echo $MYSQL_MODULE_NAME | sed 's@\.@/@g') 
+MYSQL_MODULE_DIR=$(echo $MYSQL_MODULE_NAME | sed 's@\.@/@g')
 MYSQL_MODULE=$BPMS_HOME/$BPMS_ROOT/modules/${MYSQL_MODULE_DIR}/main
 if [ ! -d $MYSQL_MODULE ];
 then
@@ -245,7 +250,10 @@ sed -i s/java:jboss\\/datasources\\/ExampleDS/java:jboss\\/datasources\\/jbpmDS/
 
 # Configure persistence in dashboard app
 echo "Configure persistence Dashboard app"
-sed -i s/java:jboss\\/datasources\\/ExampleDS/java:jboss\\/datasources\\/jbpmDS/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/jboss-web.xml
+sed -i s/java:jboss\\/datasources\\/ExampleDS/java:jboss\\/datasources\\/dashbuilderDS/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/jboss-web.xml
+
+# Edit the following dashbuilder file that defines various out-of-the-box BPM related KPIs
+sed -i s/local/jbpmDS/ $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/jbpmKPIs_v2.kpis
 
 # Set system properties
 # Server settings
@@ -265,6 +273,8 @@ fi
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.host.ip=$IP_ADDR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.host.port=3306\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.bpms.schema=$MYSQL_BPMS_SCHEMA\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.dashbuilder.schema=$MYSQL_DASHBUILDER_SCHEMA\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+echo "JAVA_OPTS=\"\$JAVA_OPTS -Dmysql.pquote_reporting.schema=$MYSQL_PQUOTE_REPORTING_SCHEMA\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 
 # business-central
 if [ "$BUSINESS_CENTRAL" = "true" ]
@@ -300,7 +310,7 @@ fi
 # kie-server
 if [ "$KIE_SERVER" = "true" ]
 then
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.id=kie-server-$IP_ADDR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf  
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.id=kie-server-$IP_ADDR\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.location=http://${IP_ADDR}:${KIE_SERVER_PORT}/kie-server/services/rest/server\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.server.ext.disabled=$BPMS_EXT_DISABLED\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.drools.server.ext.disabled=$BRMS_EXT_DISABLED\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
@@ -319,17 +329,17 @@ then
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.ht.callback=props\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Djbpm.user.group.mapping=file:${BPMS_HOME}/${BPMS_ROOT}/standalone/configuration/application-roles.properties\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.ht.userinfo=props\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Djbpm.user.info.properties=file:${BPMS_HOME}/${BPMS_ROOT}/standalone/configuration/bpms-userinfo.properties\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf  
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Djbpm.user.info.properties=file:${BPMS_HOME}/${BPMS_ROOT}/standalone/configuration/bpms-userinfo.properties\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 elif [ "$KIE_SERVER" = "true" ]
 then
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.ht.callback=jaas\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
-  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.ht.userinfo=props\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf  
+  echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.jbpm.ht.userinfo=props\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Djbpm.user.info.properties=file:${BPMS_HOME}/${BPMS_ROOT}/standalone/configuration/bpms-userinfo.properties\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
 fi
 
 # managed kie-server
 KIE_SERVER_CONTROLLER_IP=$IP_ADDR
-if [ "$KIE_SERVER" = "true" -a "$KIE_SERVER_MANAGED" = "true" ] 
+if [ "$KIE_SERVER" = "true" -a "$KIE_SERVER_MANAGED" = "true" ]
 then
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller=http://${KIE_SERVER_CONTROLLER_IP}:${BUSINESS_CENTRAL_PORT}/business-central/rest/controller\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
   echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.kie.server.controller.user=kieserver\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
@@ -344,5 +354,15 @@ fi
 
 # quartz properties
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dorg.quartz.properties=${BPMS_HOME}/${BPMS_ROOT}/standalone/configuration/quartz.properties\"" >> $BPMS_HOME/$BPMS_ROOT/bin/standalone.conf
+
+# pquote_reporting dashboards
+echo "Configure pquote dashboard"
+if [ "$DASHBOARD" = "true" ];
+then
+  cp -f $SCRIPT_DIR/pquote.workspace $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/pquote.workspace
+  cp -f $SCRIPT_DIR/pquote.kpis $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/pquote.kpis
+  cp -f $SCRIPT_DIR/pquote.datasource $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/pquote.datasource
+  cp -f $SCRIPT_DIR/jbpm.datasource $BPMS_HOME/$BPMS_ROOT/standalone/deployments/dashbuilder.war/WEB-INF/deployments/jbpm.datasource
+fi
 
 exit 0

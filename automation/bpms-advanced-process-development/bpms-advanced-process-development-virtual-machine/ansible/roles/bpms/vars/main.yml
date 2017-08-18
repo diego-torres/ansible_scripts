@@ -9,5 +9,3 @@ bpms_root_orig: jboss-eap-7.0
 bpms_mysql_module_name: com.mysql
 bpms_mysql_driver: mysql-connector-java.jar
 bpms_mysql_driver_path: /usr/share/java
-bpms_mysql_user: jboss
-bpms_mysql_password: jboss

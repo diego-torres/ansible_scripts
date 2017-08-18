@@ -16,15 +16,16 @@ echo "Resetting MySQL"
 mysql $MYSQL_FLAGS <<EOSQL
     DROP DATABASE bpms;
     CREATE DATABASE IF NOT EXISTS bpms;
+    DROP DATABASE dashbuilder;
+    CREATE DATABASE IF NOT EXISTS dashbuilder;
 EOSQL
 
 mysql $MYSQL_FLAGS bpms < $SQL_BASE/mysql5-jbpm-schema.sql
 mysql $MYSQL_FLAGS bpms < $SQL_BASE/quartz_tables_mysql.sql
-mysql $MYSQL_FLAGS bpms < $SQL_BASE/mysql5-dashbuilder-schema.sql
+mysql $MYSQL_FLAGS dashbuilder < $SQL_BASE/mysql5-dashbuilder-schema.sql
 
 echo "Remove JBDS Workspace"
 if [ -d $JBDS_WORKSPACE ];
 then
   rm -rf $JBDS_WORKSPACE
 fi
-

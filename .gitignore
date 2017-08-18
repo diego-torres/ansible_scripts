@@ -5,6 +5,7 @@
 *.zip
 *.jar
 *.swp
+*.retry
 oc
 *~
 ~lock.*
@@ -20,3 +21,4 @@ not4git/
 docker.pid
 *test.yml
 hosts
+jq-linux64
