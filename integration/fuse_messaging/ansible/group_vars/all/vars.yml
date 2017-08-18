@@ -9,7 +9,7 @@ rhel_channel: rhel-7-server-rpms
 extras_channel: rhel-7-server-extras-rpms
 supplementary_channel: rhel-7-server-supplementary-rpms
 optional_channel: rhel-7-server-optional-rpms
-qpid_interconnect_channel: a-mq-interconnect-1-for-rhel-7-server-rpms
+qpid_interconnect_channel: amq-interconnect-1-for-rhel-7-server-rpms
 qpid_client_channel: a-mq-clients-1-for-rhel-7-server-rpms
 
 amq_base_name: amq-broker-7.0.1
