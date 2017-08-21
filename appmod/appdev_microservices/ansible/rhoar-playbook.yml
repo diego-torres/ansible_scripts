@@ -1,0 +1,19 @@
+- hosts: appdev_microservices_development
+  remote_user: root
+  
+  roles:
+    - update
+    - geerlingguy.repo-epel # rhel; need to execute the following beforehand:  sudo ansible-galaxy install geerlingguy.repo-epel
+    - useradd
+    - selinux
+    - tools
+    - reboot
+    - mate
+    - java
+    - maven
+    - jq
+    - openshift
+    - jbds
+    - yum-clean
+    - rhn_unsubscribe
+
