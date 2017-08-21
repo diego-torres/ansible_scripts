@@ -3,7 +3,6 @@
   
   roles:
     - update
-    - geerlingguy.repo-epel # rhel; need to execute the following beforehand:  sudo ansible-galaxy install geerlingguy.repo-epel
     - useradd
     - selinux
     - tools
