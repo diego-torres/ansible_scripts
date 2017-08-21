@@ -11,7 +11,7 @@
     - java
     - maven
     - jq
-    - openshift
+    - oc-cli
     - jbds
     - yum-clean
     - rhn_unsubscribe
