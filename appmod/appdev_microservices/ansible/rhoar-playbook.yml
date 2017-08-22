@@ -3,11 +3,13 @@
   
   roles:
     - update
-    - useradd
-    - selinux
     - tools
-    - reboot
+    - geerlingguy.repo-epel    
+    - guest-additions
+    - useradd
     - mate
+    - selinux
+    - reboot
     - java
     - maven
     - jq
