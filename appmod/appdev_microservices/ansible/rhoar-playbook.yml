@@ -1,20 +1,27 @@
 - hosts: appdev_microservices_development
   remote_user: root
+  vars_prompt:
+    - name: is_ravello
+      prompt: "Is this a VM that will be managed by GPTE CloudForms (y/n)? "
+      default: "y"
+      private: no
   
   roles:
+    - hostname
     - update
+    - selinux
+    - reboot
     - tools
-    - geerlingguy.repo-epel    
+    - epel   
     - guest-additions
     - useradd
     - mate
-    - selinux
-    - reboot
     - java
     - maven
     - jq
     - oc-cli
     - jbds
     - yum-clean
-    - rhn_unsubscribe
+    - onprem-labs
+    - remove_history
 

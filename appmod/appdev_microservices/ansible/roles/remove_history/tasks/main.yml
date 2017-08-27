@@ -1,8 +1,5 @@
 ---
 
-- name: Unsubscribe from RHN
-  shell: "subscription-manager remove --all; subscription-manager unregister; subscription-manager clean"
-
 - name: Delete root History 
   shell: "history -c"
 

@@ -1,7 +1,4 @@
 ---
 
-- name: Enable Extras (which contains docker), supplementary and Optional channels
-  shell: "subscription-manager repos --enable={{extras_channel}} --enable={{supplementary_channel}} --enable={{optional_channel}}"
-
 - name: Install tools
   yum: name=git,zip,bzip2,unzip,gettext,wget,curl state=present

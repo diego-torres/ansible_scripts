@@ -9,14 +9,8 @@
 +
 Ansible will then customize this virtual machine.
 
-* OS : RHEL 7 x68_64
+* OS : Centos7 x86_64
 +
-Ensure the following channels are enabled
-
-*** rhel-7-server-rpms
-*** rhel-7-server-extras-rpm
-*** rhel-7-server-supplementary-rpm
-
 
 * Disk: 20GB, dynamically allocated, VDI format
 * Memory : 4GB
@@ -26,9 +20,9 @@ Ensure the following channels are enabled
 ** HDD Partitioning:
 *** File system : ext4
 *** boot 500 MiB, swap 2048 MiB, root partition 17.5 GiB
-** Minimal rhel7 installation
+** Minimal centos7 installation
 ** No user created
-** Root password : r3dh@t!
+** Root password : r3dh4t!
 * Post-installation tasks:
 ** copy public ssh key to virtual machine for user root
 
@@ -40,21 +34,12 @@ Ensure the following channels are enabled
 ----
 qemu-img create -f qcow2 appmod.qcow2  20G
 ----
-* Use `virt-install` to provision virtual machine from rhel7 `iso`. To carry the process you will also need `virt-viewer` package.
+* Use `virt-install` to provision virtual machine from centos7 `iso`. To carry the process you will also need `virt-viewer` package.
 +
 ----
-virt-install -n rhoar -r 4096 -vcpus=2 -v --os-type=linux --os-variant=rhel7 --disk appmod.qcow2,format=qcow2,bus=virtio -c rhel-server-7.4-x86_64-dvd.iso
+virt-install -n rhoar -r 4096 -vcpus=2 -v --os-type=linux --os-variant=rhel7 --disk appmod.qcow2,format=qcow2,bus=virtio -c CentOS-7-x86_64-Minimal-1611.iso
 ----
 
-
-== RHEL 7 Pre-reqs
-
-. Ensure the target RHEL OS has already been registered with Red Hat Network
-. Execute the following from your local environment:
-+
------
-sudo ansible-galaxy install geerlingguy.repo-epe
------
 
 == Inventory file
 Copy the `hosts.example` file to `hosts`, and replace `<ip address of virtual machine>` with the IP address of the virtual machine.
