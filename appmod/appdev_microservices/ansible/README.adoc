@@ -1,0 +1,82 @@
+:scrollbar:
+:data-uri:
+
+= Ansible playbook for virtual machines that support GPTE appmod microservices_ courses
+
+== Base image
+
+. The following base virtual machine should already be running.
++
+Ansible will then customize this virtual machine.
+
+* OS : Centos7 x86_64
++
+
+* Disk: 20GB, dynamically allocated, VDI format
+* Memory : 4GB
+* Base images installation:
+** Hostname: gpte
+** Network: on
+** HDD Partitioning:
+*** File system : ext4
+*** boot 500 MiB, swap 2048 MiB, root partition 17.5 GiB
+** Minimal centos7 installation
+** No user created
+** Root password : r3dh4t!
+* Post-installation tasks:
+** copy public ssh key to virtual machine for user root
+
+. It is highly recommended that this virtual machine be in a `qcow2` image format.
++
+`qcow2` can then be transformed to VDI if/when need be.
+* `qcow2` rhel7 can be created
++
+----
+qemu-img create -f qcow2 appmod.qcow2  20G
+----
+* Use `virt-install` to provision virtual machine from centos7 `iso`. To carry the process you will also need `virt-viewer` package.
++
+----
+virt-install -n rhoar -r 4096 -vcpus=2 -v --os-type=linux --os-variant=rhel7 --disk appmod.qcow2,format=qcow2,bus=virtio -c CentOS-7-x86_64-Minimal-1611.iso
+----
+
+
+== Inventory file
+Copy the `hosts.example` file to `hosts`, and replace `<ip address of virtual machine>` with the IP address of the virtual machine.
+
+== Provisioning
+In this directory, execute the following command:
+
+-----
+$ ansible-playbook -i hosts rhoar-playbook.yml
+-----
+
+== Sparsify qcow2 image
+
+Sparsifying a virtual machine can make a dramatic reduction in the size of the virtual machine image.
+
+. Ensure that target VM to be sparsified has been cleaned of all temporary work files.
++
+Also, execute: `yum clean all`
+
+. Shutdown the virtual machine.
+
+. if /tmp/ (on local workstation) does not have enough space, set the `TMPDIR` environment variable to a directory path that does have sufficient space.
++
+Example as follows:
++
+-----
+export TMPDIR=/u02/vm/
+-----
+
+. sparsify the image.  Example as follows:
++
+-----
+virt-sparsify --compress ose_dev.qcow2 ose_dev_sparse.qcow2
+-----
+
+== Conversion to VDI
+
+-----
+qemu-img convert  -f qcow2 -O vdi appmod.qcow2   rhoar.vdi
+-----

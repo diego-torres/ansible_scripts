@@ -1,0 +1,7 @@
+mvn_install_dir: "{{lab_home_dir}}/mvn"
+mvn_install_script_dir: mvn
+mvn_resources_dir: resources
+mvn_configuration_dir: configuration
+mvn_distro: "{{mvn_root}}-bin.zip"
+mvn_marker_file: "{{mvn_install_dir}}/{{mvn_root}}/bin/mvn"
+

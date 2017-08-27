@@ -1,0 +1,4 @@
+---
+
+- name: Add rhoar user
+  user: name={{user}} groups=wheel password={{password}}

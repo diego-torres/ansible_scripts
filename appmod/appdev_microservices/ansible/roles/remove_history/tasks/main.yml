@@ -1,0 +1,9 @@
+---
+
+- name: Delete root History 
+  shell: "history -c"
+
+- name: Delete {{user}}History 
+  shell: "history -c"
+  become: yes
+  become_user: "{{user}}"
