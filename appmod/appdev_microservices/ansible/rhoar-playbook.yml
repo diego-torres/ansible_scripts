@@ -18,9 +18,11 @@
     - mate
     - java
     - maven
+    - maven-repo
     - jq
     - oc-cli
     - jbds
+    - start-scripts
     - yum-clean
     - onprem-labs
     - remove_history

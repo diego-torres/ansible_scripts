@@ -1,7 +1,7 @@
 ---
 
 - name: Copy oc binary
-  copy: src={{oc_distro}} dest={{oc_install_dir}} owner={{user}} group={{user}}
+  copy: src={{oc_distro}} dest={{oc_install_dir}} owner=root group=root
 
 - name: Set file permissions
   file:

@@ -1,17 +1,4 @@
 ---
+- name: Install jq
+  yum: name=jq state=present
 
-- name: Copy jq binary
-  copy: 
-    src: "{{jq_download}}" 
-    dest: /usr/local/bin
-
-- name: Set file permissions
-  file:
-    path: /usr/local/bin/{{jq_download}}
-    mode: 0775
-
-- name: create soft link to jq executable
-  file:
-    src: /usr/local/bin/{{jq_download}}
-    dest: /usr/local/bin/jq 
-    state: link

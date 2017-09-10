@@ -1,0 +1,7 @@
+roles/jbds/files/devstudio-10.3.0.GA-installer-standalone.jar
+roles/maven-repo/files
+roles/maven/files/apache-maven-3.5.0-bin.zip
+roles/oc-cli/files/oc
+hosts
+*.tmp
+*.retry

@@ -2,6 +2,60 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
     <profiles>
+        <!-- Configure the JBoss Mirror Maven repository -->
+        <profile>
+            <id>jboss-repository</id>
+            <repositories>
+                <repository>
+                    <id>jboss</id>
+                    <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>jboss-snapshot</id>
+                    <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>daily</updatePolicy>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>jboss-plugins</id>
+                    <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>jboss-snapshot-plugins</id>
+                    <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>daily</updatePolicy>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
         <!-- Configure the JBoss GA Maven repository -->
         <profile>
             <id>jboss-ga-repository</id>
@@ -60,6 +114,7 @@
         </profile>
     </profiles>
     <activeProfiles>
+        <activeProfile>jboss-repository</activeProfile>
         <activeProfile>jboss-ga-repository</activeProfile>
         <activeProfile>jboss-earlyaccess-repository</activeProfile>
     </activeProfiles>

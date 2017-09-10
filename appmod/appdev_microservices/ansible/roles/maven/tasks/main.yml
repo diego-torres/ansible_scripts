@@ -1,7 +1,7 @@
 ---
 
 - name: Create installation target directory
-  file: path={{mvn_install_dir}} state=directory owner={{user}} group={{user}}
+  file: path={{mvn_install_dir}} state=directory owner=root group=root
 
 - name: Create installation directory
   file: path={{install_script_dir}}/{{mvn_install_script_dir}} state=directory mode=0755
@@ -14,14 +14,9 @@
 - name: Create installation configuration directory
   file: path={{install_script_dir}}/{{mvn_install_script_dir}}/{{mvn_configuration_dir}} state=directory mode=0755
 
-- name : Copy configuration files
-  copy: src={{item}} dest={{install_script_dir}}/{{mvn_install_script_dir}}/{{mvn_configuration_dir}}
-  with_items:
-    - install/configuration/mvn-settings.xml
-
 - name: Set file permissions
   file: 
-    path={{install_script_dir}}/{{mvn_install_script_dir}}/{{item}} 
+    path={{install_script_dir}}/{{mvn_install_script_dir}}/{{item}}
     mode=0775
   with_items:
     - install-mvn.sh
@@ -35,6 +30,14 @@
 - name: Execute {{install_script_dir}}/mvn/install-mvn.sh
   shell: 
     '{{install_script_dir}}/mvn/install-mvn.sh creates={{mvn_marker_file}}'
+
+- name: Create .m2 directory
+  file: path={{home_dir}}/.m2 state=directory owner={{user}} group={{user}}
+
+- name: Copy Maven settings file
+  copy: src={{item}} dest={{home_dir}}/.m2/settings.xml
+  with_items:
+    - install/configuration/mvn-settings.xml
   become: yes
   become_user: "{{user}}"
 

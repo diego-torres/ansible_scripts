@@ -10,29 +10,8 @@
     update: yes
   become: yes
   become_user: "{{user}}"
-
-  #- name: Build {{onprem_labs}}
-  #  shell: "{{mvn_install_dir}}/{{mvn_root}}/bin/mvn clean package -DskipTests"
-  #  args:
-  #    chdir: "{{lab_home_dir}}/{{onprem_labs}}/services"
-  #  become: yes
-  #  become_user: "{{user}}"
-  #
-  #- name: Clean {{onprem_labs}}
-  #  shell: "{{mvn_install_dir}}/{{mvn_root}}/bin/mvn clean"
-  #  args:
-  #    chdir: "{{lab_home_dir}}/{{onprem_labs}}/services"
-  #  become: yes
-  #  become_user: "{{user}}"
-  #
 - name: chown of {{onprem_labs}}
   file:
     path: "{{lab_home_dir}}/{{onprem_labs}}"
-    owner: "{{user}}"
-    group: "{{user}}"
-
-- name: chown of /home/{{user}}/.m2
-  file:
-    path: "/home/{{user}}/.m2"
     owner: "{{user}}"
     group: "{{user}}"
