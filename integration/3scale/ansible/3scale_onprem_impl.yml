@@ -9,12 +9,12 @@
   roles:
     - hostname
     - update
+
+    - epel                      # centos only
+#   - geerlingguy.repo-epel     # rhel; need to execute the following beforehand:  sudo ansible-galaxy install geerlingguy.repo-epel
+#
     - tools
     - docker
-
-#   - epel                      # centos only
-    - geerlingguy.repo-epel     # rhel; need to execute the following beforehand:  sudo ansible-galaxy install geerlingguy.repo-epel
-
     - xmlstarlet
     - nginx
     - reboot

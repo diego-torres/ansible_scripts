@@ -57,10 +57,17 @@ Copy the `hosts.example` file to `hosts`, and replace `<ip address of virtual ma
 .. jboss-amq-qpid-jms-0.20.0.redhat-2-maven-repository.zip
 
 == Provisioning
-In this directory, execute the following command:
+
+In this directory, execute the following command if using centos:
 
 -----
-$ ansible-playbook -i hosts fuse_messaging.yml
+$ ansible-playbook -i hosts 3scale_onprem_impl.yml --skip-tags "rhel"
+-----
+
+If base image is RHEL, then execute:
+
+-----
+$ ansible-playbook -i hosts 3scale_onprem_impl.yml --tags "rhel"
 -----
 
 == Sparsify qcow2 image
