@@ -1,4 +1,0 @@
----
-
-- name: Install xmlstarlet (found in EPEL)
-  yum: name=xmlstarlet state=present

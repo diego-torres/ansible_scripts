@@ -1,4 +1,0 @@
----
-
-- name: Install nginx (which comes from EPEL)
-  yum: name=nginx state=present
