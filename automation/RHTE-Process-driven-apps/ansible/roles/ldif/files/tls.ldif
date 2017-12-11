@@ -1,0 +1,15 @@
+dn: cn=config
+changetype: modify
+replace: olcTLSCACertificatePath
+olcTLSCACertificatePath: /etc/openldap/certs
+-
+replace: olcTLSCertificateFile
+olcTLSCertificateFile: LDAP-Certificate
+-
+replace: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/openldap/certs/password
+
+dn: cn=config
+changetype:  modify
+add: olcSecurity
+olcSecurity: tls=1

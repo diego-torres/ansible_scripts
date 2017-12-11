@@ -1,0 +1,51 @@
+---
+
+- name: Install mysql-connector-java
+  yum: name=mysql-connector-java state=present
+
+- name: Create installation target directory
+  file: path={{bpms_install_dir}} state=directory owner={{user}} group={{user}}
+
+- name: Create installation script directory
+  file: path={{install_script_dir}}/{{bpms_install_script_dir}} state=directory mode=0755
+
+- name : Copy installation scripts
+  template: src={{item}} dest={{install_script_dir}}/{{bpms_install_script_dir}}
+  with_items:
+    - install/{{bpms_install_script}}
+
+- name : Copy installation script fragments
+  template: src={{item}} dest={{install_script_dir}}/{{bpms_install_script_dir}}
+  with_items:
+    - install/scripts/mysql-bpms-datasource-config.xml
+    - install/scripts/mysql-pquote-reporting-datasource-config.xml
+    - install/scripts/mysql-driver-config.xml
+    - install/scripts/mysql-module.xml
+    - install/scripts/mysql-quartz-datasource-config.xml
+    - install/scripts/quartz.properties
+    - install/scripts/standalone.xml
+    - install/scripts/pquote.workspace
+    - install/scripts/pquote.kpis
+    - install/scripts/pquote.datasource
+    - install/scripts/jbpm.datasource
+
+- name: Create installation resources directory
+  file: path={{install_script_dir}}/{{bpms_install_script_dir}}/{{bpms_resources_dir}} state=directory mode=0755
+
+- name: Copy EAP distro
+  copy: src={{eap_distro}} dest={{install_script_dir}}/{{bpms_install_script_dir}}/{{bpms_resources_dir}}/{{eap_distro}}
+
+- name: Copy BPMS distro
+  copy: src={{bpms_distro}} dest={{install_script_dir}}/{{bpms_install_script_dir}}/{{bpms_resources_dir}}/{{bpms_distro}}
+
+- name: Set file permissions
+  file:
+    path={{install_script_dir}}/{{bpms_install_script_dir}}/{{item}}
+    mode=0775
+  with_items:
+    - "{{bpms_install_script}}"
+
+- name: Copy main installation script template
+  template: src={{item}}  dest={{lab_home_dir}} owner={{user}} group={{user}} mode=0755
+  with_items:
+    - install/install-bpms.sh

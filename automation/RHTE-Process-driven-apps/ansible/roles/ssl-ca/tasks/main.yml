@@ -1,0 +1,19 @@
+---
+
+- name: Create directories for ssl and create
+  file: path={{item}} state=directory owner={{user}} group={{user}}
+  with_items:
+    - "{{ssl_install_dir}}"
+    - "{{ssl_install_dir}}/certs"
+    - "{{ssl_install_dir}}/newcerts"
+    - "{{ssl_install_dir}}/private"
+    - "{{ssl_install_dir}}/crl"
+
+- name: Copy ssl configuration file
+  copy: src=ca.cnf dest={{ssl_install_dir}} owner={{user}} group={{user}} mode=0664
+
+- name: Create index file
+  copy: content="" dest={{ssl_install_dir}}/index.txt force=no owner={{user}} group={{user}} mode=0664
+
+- name: Create serial file
+  copy: content="01" dest={{ssl_install_dir}}/serial force=no owner={{user}} group={{user}} mode=0664

@@ -1,0 +1,4 @@
+type=JNDI
+name=pquoteReportingDs
+testQuery=SELECT count(state_id) FROM `DIM_STATES`
+jndiPath=java:jboss/datasources/pquoteReportingDS

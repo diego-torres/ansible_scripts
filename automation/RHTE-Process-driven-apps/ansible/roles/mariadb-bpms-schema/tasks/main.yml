@@ -1,0 +1,74 @@
+---
+
+- name: Ensure Mariadb is started
+  service: name=mariadb state=started
+
+- name: Create installation directory
+  file: path={{install_script_dir}}/{{mysqlddl_install_script_dir}} state=directory mode=0755
+
+- name : Copy installation files
+  copy: src=install/ dest={{install_script_dir}}/{{mysqlddl_install_script_dir}}
+
+
+########   bpms database    #########
+- name: create bpms database and corresponding user
+  mysql_db:
+    name: "{{ bpms_mysql_db_name }}"
+    state: present
+  become: yes
+  become_user: "{{user}}"
+- mysql_user:
+    name: "{{bpms_mysql_user}}"
+    password: "{{bpms_mysql_password}}"
+    priv: '{{ bpms_mysql_db_name }}.*:ALL'
+    state: present
+- mysql_user:
+    name: "{{bpms_mysql_user}}"
+    password: "{{bpms_mysql_password}}"
+    priv: '{{ bpms_mysql_db_name }}.*:ALL'
+    state: present
+    host: "%"
+
+- name: import data into {{ bpms_mysql_db_name }} RDBMS
+  mysql_db:
+    name: "{{ bpms_mysql_db_name }}"
+    state: import
+    target: "{{install_script_dir}}/{{mysqlddl_install_script_dir}}/sql/mysql5-jbpm-schema.sql"
+  ignore_errors: yes
+- name: import data into {{ bpms_mysql_db_name }} RDBMS
+  mysql_db:
+    name: "{{ bpms_mysql_db_name }}"
+    state: import
+    target: "{{install_script_dir}}/{{mysqlddl_install_script_dir}}/sql/quartz_tables_mysql.sql"
+  ignore_errors: yes
+######################################
+
+
+
+
+########   dashbuilder database    #########
+- name: create dashbuilder database and corresponding user
+  mysql_db:
+    name: "{{ dashbuilder_mysql_db_name}}"
+    state: present
+  become: yes
+  become_user: "{{user}}"
+- mysql_user:
+    name: "{{dashbuilder_mysql_user}}"
+    password: "{{dashbuilder_mysql_password}}"
+    priv: '{{ dashbuilder_mysql_db_name}}.*:ALL'
+    state: present
+- mysql_user:
+    name: "{{dashbuilder_mysql_user}}"
+    password: "{{dashbuilder_mysql_password}}"
+    priv: '{{ dashbuilder_mysql_db_name}}.*:ALL'
+    state: present
+    host: "%"
+
+- name: import data into {{ dashbuilder_mysql_db_name }} RDBMS
+  mysql_db:
+    name: "{{ dashbuilder_mysql_db_name }}"
+    state: import
+    target: "{{install_script_dir}}/{{mysqlddl_install_script_dir}}/sql/mysql5-dashbuilder-schema.sql"
+  ignore_errors: yes
+###############################################

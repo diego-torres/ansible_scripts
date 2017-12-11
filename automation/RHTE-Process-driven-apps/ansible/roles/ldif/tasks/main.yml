@@ -1,0 +1,11 @@
+---
+
+- name: Create directory for ldif files
+  file: path={{ldif_install_dir}} state=directory owner={{user}} group={{user}}
+
+- name: Copy ldif files
+  copy: src={{item}} dest={{ldif_install_dir}} owner={{user}} group={{user}} mode=0664
+  with_items:
+    - groups.ldif
+    - users.ldif
+    - tls.ldif

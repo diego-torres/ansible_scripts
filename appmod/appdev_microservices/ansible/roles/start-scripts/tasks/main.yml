@@ -1,0 +1,12 @@
+---
+
+- name: Copy start scripts
+  template: src={{item}} dest={{lab_home_dir}}
+  with_items:
+    - start-jbds.sh
+
+- name: Set file owner and permissions
+  file: path={{lab_home_dir}}/{{item}}  owner={{user}} group={{user}} mode=0775
+  with_items: 
+    - start-jbds.sh
+
