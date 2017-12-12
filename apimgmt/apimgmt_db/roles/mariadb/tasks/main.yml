@@ -32,12 +32,18 @@
 - name: Enable Mariadb
   service: name=mariadb enabled=yes
 
+- name: Create system_* databases
+  mysql_db:
+    name: "system_{{item}}"
+    state: present
+  with_sequence: "start={{start_userID}} end={{end_userID}} format=user%d"
+
 # Test: mysql -h 192.168.122.209 -u user76 -p"uweriwerk38IEuwUG8)2cw"
 - name: Configure users
   mysql_user:
     name: "{{ item }}"
     password: "{{ MYSQL_USER_PASSWORD }}"
-    priv: '*.*:ALL,GRANT'
+    priv: 'system_{{item}}.*:ALL,GRANT'
     host: "%"
     state: present
   with_sequence: "start={{start_userID}} end={{end_userID}} format=user%d"

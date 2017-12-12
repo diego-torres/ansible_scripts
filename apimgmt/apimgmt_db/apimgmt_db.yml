@@ -20,4 +20,6 @@
     - firewalld
     - yum-clean
 
+    - mariadb
+
 #    - rhn_unsubscribe
