@@ -1,7 +1,8 @@
 ---
 
-- name: Install MariaDb
+- name: Install MariaDb and MySQL-python (so as to be able to use  "mysql_user" ansible module)
   yum: name=mariadb-server state=present
+- yum: name=MySQL-python state=present
 
 - name: Create installation directory
   file: path={{install_script_dir}}/{{mysql_install_script_dir}} state=directory mode=0755
@@ -23,10 +24,20 @@
     creates={{install_script_dir}}/mysqld-install-log.txt'
   environment:
     MYSQL_LOWER_CASE_TABLE_NAMES: 1
-    MYSQL_ROOT_PASSWORD: redhat
+    MYSQL_ROOT_PASSWORD: "{{ MYSQL_ROOT_PASSWORD }}"
 
 - name: Start Mariadb
   service: name=mariadb state=started
 
 - name: Enable Mariadb
   service: name=mariadb enabled=yes
+
+# Test: mysql -h 192.168.122.209 -u user76 -p"uweriwerk38IEuwUG8)2cw"
+- name: Configure users
+  mysql_user:
+    name: "{{ item }}"
+    password: "{{ MYSQL_USER_PASSWORD }}"
+    priv: '*.*:ALL,GRANT'
+    host: "%"
+    state: present
+  with_sequence: "start={{start_userID}} end={{end_userID}} format=user%d"
