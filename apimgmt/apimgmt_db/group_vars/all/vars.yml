@@ -12,6 +12,7 @@ optional_channel: rhel-7-server-optional-rpms
 mysql_install_script_dir: mysql
 MYSQL_ROOT_PASSWORD: 2uriwer_qcl41!iedcn54l
 MYSQL_USER_PASSWORD: uweriwerk38IEuwUG8)2cw
+PSQL_USER_PASSWORD: uweriwerk38IEuwUG8)2cw
 
 start_userID: 1
-end_userID: 100
+end_userID: 10
