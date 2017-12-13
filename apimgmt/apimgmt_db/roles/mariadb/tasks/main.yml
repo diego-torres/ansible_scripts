@@ -38,7 +38,7 @@
     state: present
   with_sequence: "start={{start_userID}} end={{end_userID}} format=user%d"
 
-# Test: mysql -h 192.168.122.209 -u user76 -p"uweriwerk38IEuwUG8)2cw"
+# Test: mysql -h 192.168.122.209 -u user7 -p"uweriwerk38IEuwUG8)2cw"
 - name: Configure users
   mysql_user:
     name: "{{ item }}"
