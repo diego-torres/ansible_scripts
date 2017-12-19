@@ -1,7 +1,7 @@
 ---
 
-- name: Install PostgreSQL and MySQL-python (so as to be able to use  "python-psycopg2" ansible module)
-  yum: name=postgresql-server,postgresql-contrib state=present
+- name: Install PostgreSQL (v9.5 from RHT Software Collections) and pythonpsycopg2 (so as to be able to use  "python-psycopg2" ansible module)
+  yum: name=rh-postgresql95-postgresql-server,rh-postgresql95-postgresql-contrib state=present
 - yum: name=python-psycopg2 state=present
 
 - name: Check if initialized postgresql directory already exists

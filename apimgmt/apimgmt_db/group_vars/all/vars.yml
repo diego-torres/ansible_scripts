@@ -8,6 +8,7 @@ hostname: apimgmtdb
 extras_channel: rhel-7-server-extras-rpms
 supplementary_channel: rhel-7-server-supplementary-rpms
 optional_channel: rhel-7-server-optional-rpms
+rhscl_channel: rhel-server-rhscl-7-rpms
 
 mysql_install_script_dir: mysql
 MYSQL_ROOT_PASSWORD: 2uriwer_qcl41tiedcn54l
