@@ -1,4 +1,4 @@
-- hosts: 3scale_impl 
+- hosts: apimgmt_db
   remote_user: root
   vars_prompt:
     - name: is_ravello

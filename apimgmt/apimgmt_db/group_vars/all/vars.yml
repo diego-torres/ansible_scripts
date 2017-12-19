@@ -13,6 +13,9 @@ rhscl_channel: rhel-server-rhscl-7-rpms
 mysql_install_script_dir: mysql
 MYSQL_ROOT_PASSWORD: 2uriwer_qcl41tiedcn54l
 MYSQL_USER_PASSWORD: uweriwerk38IEuwUG872cw
+
+PSQL_INSTALL_DIR: /opt/rh/rh-postgresql95
+PSQL_DATA_DIR: /var/opt/rh/rh-postgresql95/lib/pgsql/data/
 PSQL_USER_PASSWORD: uweriwerk38IEuwUG872cw
 
 start_userID: 1
