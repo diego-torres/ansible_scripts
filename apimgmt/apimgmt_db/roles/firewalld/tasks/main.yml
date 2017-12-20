@@ -24,6 +24,12 @@
     permanent: true
     state: enabled
 
+- name: Configure firewalld to allow for remote access to redis
+  firewalld:
+    port: 6379/tcp
+    permanent: true
+    state: enabled
+
 -  command: firewall-cmd --permanent --zone public --add-source 172.17.0.0/16
 
 - name: bounce firewalld
