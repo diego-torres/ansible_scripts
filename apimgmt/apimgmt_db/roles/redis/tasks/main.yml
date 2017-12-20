@@ -16,6 +16,7 @@
     owner: redis
 
 # Appears there is not a mechanism to specify a password to the Redis database from the 3scale AMP pods that make use of redis
+# https://access.redhat.com/support/cases/#/case/01997657
 #- name: Set a password for Redis
 #  replace:
 #    path: "/etc/opt/rh/{{REDIS_VERSION}}/redis.conf"
